@@ -231,6 +231,16 @@ tbody tr:last-child td{border-bottom:none;}
           <div class="err-tip">请输入正确的定价</div>
         </div>
       </div>
+      <div class="form-row" id="row-days">
+        <div class="form-label"><span class="req">*</span>会员天数</div>
+        <div class="form-ctrl">
+          <div class="price-input">
+            <input type="number" id="f-days" placeholder="请输入会员天数" min="1" step="1">
+            <span class="unit">天</span>
+          </div>
+          <div class="err-tip">请输入正确的会员天数</div>
+        </div>
+      </div>
       <div class="form-row" id="row-oprice">
         <div class="form-label">商品原价</div>
         <div class="form-ctrl">
@@ -295,9 +305,9 @@ tbody tr:last-child td{border-bottom:none;}
 <script>
 /* ── Demo data ── */
 let products = [
-  {id:1, name:'连续包月', price:19.9, oprice:25, start:'2026-10-01', end:'2027-10-01', cont:true, ab:false, abGroups:[], etitle:'连续包月', edesc:'到期按19.9/月续费，可随时取消'},
-  {id:2, name:'月卡', price:25, oprice:'', start:'2026-11-01', end:'2026-12-01', cont:false, ab:false, abGroups:[], etitle:'月卡', edesc:'0.83元/天'},
-  {id:3, name:'年卡', price:168, oprice:'', start:'2026-01-01', end:'2026-10-01', cont:false, ab:false, abGroups:[], etitle:'年卡', edesc:'14元/月'},
+  {id:1, name:'连续包月', price:19.9, days:30, oprice:25, start:'2026-10-01', end:'2027-10-01', cont:true, ab:false, abGroups:[], etitle:'连续包月', edesc:'到期按19.9/月续费，可随时取消'},
+  {id:2, name:'月卡', price:25, days:30, oprice:'', start:'2026-11-01', end:'2026-12-01', cont:false, ab:false, abGroups:[], etitle:'月卡', edesc:'0.83元/天'},
+  {id:3, name:'年卡', price:168, days:365, oprice:'', start:'2026-01-01', end:'2026-10-01', cont:false, ab:false, abGroups:[], etitle:'年卡', edesc:'14元/月'},
 ];
 let nextId = Math.max(...products.map(p => p.id)) + 1;
 let editIndex = -2; // -2 none, -1 add, >=0 edit
@@ -350,9 +360,10 @@ function esc(s){ const d = document.createElement('div'); d.textContent = s; ret
 function openModal(idx){
   editIndex = idx;
   document.getElementById('modalTitle').textContent = idx >= 0 ? '编辑商品' : '新增商品';
-  const p = idx >= 0 ? products[idx] : {name:'',price:'',oprice:'',start:'',end:'',cont:false,ab:false,abGroups:[],etitle:'',edesc:''};
+  const p = idx >= 0 ? products[idx] : {name:'',price:'',days:'',oprice:'',start:'',end:'',cont:false,ab:false,abGroups:[],etitle:'',edesc:''};
   document.getElementById('f-name').value = p.name;
   document.getElementById('f-price').value = p.price;
+  document.getElementById('f-days').value = p.days;
   document.getElementById('f-oprice').value = p.oprice;
   document.getElementById('f-start').value = p.start || '';
   document.getElementById('f-end').value = p.end || '';
@@ -434,6 +445,7 @@ document.getElementById('modalMask').addEventListener('click', e => {
 function save(){
   const name = document.getElementById('f-name').value.trim();
   const price = document.getElementById('f-price').value;
+  const days = document.getElementById('f-days').value;
   const oprice = document.getElementById('f-oprice').value;
   const startV = document.getElementById('f-start').value;
   const endV = document.getElementById('f-end').value;
@@ -452,12 +464,13 @@ function save(){
   mark('row-valid', validBad);
   mark('row-name', !name);
   mark('row-price', price === '' || +price < 0);
+  mark('row-days', days === '' || +days < 1 || !Number.isInteger(+days));
   mark('row-ab', ab && abGroups.length === 0);
   mark('row-etitle', !etitle);
   mark('row-edesc', !edesc);
   if(!ok) return;
 
-  const item = {id: editIndex >= 0 ? products[editIndex].id : nextId++, name, price:+price, oprice: oprice === '' ? '' : +oprice, start:startV, end:endV, cont, ab, abGroups, etitle, edesc};
+  const item = {id: editIndex >= 0 ? products[editIndex].id : nextId++, name, price:+price, days:+days, oprice: oprice === '' ? '' : +oprice, start:startV, end:endV, cont, ab, abGroups, etitle, edesc};
   if(editIndex >= 0){ products[editIndex] = item; toast('保存成功'); }
   else { products.unshift(item); toast('新增成功'); }
   closeModal();
