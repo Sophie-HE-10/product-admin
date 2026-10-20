@@ -66,6 +66,7 @@ tbody tr:last-child td{border-bottom:none;}
 .tag-active{background:#e8f8e8;color:#52c41a;}
 .tag-ended{background:#f5f5f5;color:#999;}
 .valid-cell{color:#666;white-space:nowrap;}
+.id-cell{color:#999;}
 .ext-title{color:#444;}
 .ext-desc{color:#888;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .op-link{color:#00b3d4;cursor:pointer;font-size:12px;}
@@ -179,6 +180,7 @@ tbody tr:last-child td{border-bottom:none;}
           <table>
             <thead>
               <tr>
+                <th>ID</th>
                 <th>商品名称</th>
                 <th>商品定价</th>
                 <th>商品原价</th>
@@ -293,10 +295,11 @@ tbody tr:last-child td{border-bottom:none;}
 <script>
 /* ── Demo data ── */
 let products = [
-  {name:'连续包月', price:19.9, oprice:25, start:'2026-10-01', end:'2027-10-01', cont:true, ab:false, abGroups:[], etitle:'连续包月', edesc:'到期按19.9/月续费，可随时取消'},
-  {name:'月卡', price:25, oprice:'', start:'2026-11-01', end:'2026-12-01', cont:false, ab:false, abGroups:[], etitle:'月卡', edesc:'0.83元/天'},
-  {name:'年卡', price:168, oprice:'', start:'2026-01-01', end:'2026-10-01', cont:false, ab:false, abGroups:[], etitle:'年卡', edesc:'14元/月'},
+  {id:1, name:'连续包月', price:19.9, oprice:25, start:'2026-10-01', end:'2027-10-01', cont:true, ab:false, abGroups:[], etitle:'连续包月', edesc:'到期按19.9/月续费，可随时取消'},
+  {id:2, name:'月卡', price:25, oprice:'', start:'2026-11-01', end:'2026-12-01', cont:false, ab:false, abGroups:[], etitle:'月卡', edesc:'0.83元/天'},
+  {id:3, name:'年卡', price:168, oprice:'', start:'2026-01-01', end:'2026-10-01', cont:false, ab:false, abGroups:[], etitle:'年卡', edesc:'14元/月'},
 ];
+let nextId = Math.max(...products.map(p => p.id)) + 1;
 let editIndex = -2; // -2 none, -1 add, >=0 edit
 
 /* ── Sidebar ── */
@@ -309,12 +312,13 @@ function render(){
   const list = products;
   const tbody = document.getElementById('tbody');
   if(!list.length){
-    tbody.innerHTML = '<tr class="empty-row"><td colspan="9">暂无数据</td></tr>';
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="10">暂无数据</td></tr>';
   }else{
     tbody.innerHTML = list.map(p => {
       const st = calcStatus(p.start, p.end);
       return `
       <tr>
+        <td class="id-cell">${p.id}</td>
         <td class="name-cell">${esc(p.name)}</td>
         <td class="price"><span class="yen">¥</span>${fmt(p.price)}</td>
         <td class="price-old">${p.oprice === '' || p.oprice == null ? '—' : '<span class="yen">¥</span>' + fmt(p.oprice)}</td>
@@ -336,8 +340,8 @@ function fmt(n){ return Number(n) % 1 === 0 ? Number(n) : Number(n).toFixed(2); 
 function calcStatus(s, e){
   const d = new Date();
   const t = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-  if(t < s) return {cls:'tag-pending', text:'未开始'};
-  if(t > e) return {cls:'tag-ended', text:'已结束'};
+  if(t < s) return {cls:'tag-pending', text:'未生效'};
+  if(t > e) return {cls:'tag-ended', text:'已失效'};
   return {cls:'tag-active', text:'生效中'};
 }
 function esc(s){ const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
@@ -453,7 +457,7 @@ function save(){
   mark('row-edesc', !edesc);
   if(!ok) return;
 
-  const item = {name, price:+price, oprice: oprice === '' ? '' : +oprice, start:startV, end:endV, cont, ab, abGroups, etitle, edesc};
+  const item = {id: editIndex >= 0 ? products[editIndex].id : nextId++, name, price:+price, oprice: oprice === '' ? '' : +oprice, start:startV, end:endV, cont, ab, abGroups, etitle, edesc};
   if(editIndex >= 0){ products[editIndex] = item; toast('保存成功'); }
   else { products.unshift(item); toast('新增成功'); }
   closeModal();
