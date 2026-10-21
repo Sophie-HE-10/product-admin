@@ -43,10 +43,6 @@ body{font-family:'Microsoft YaHei',Arial,sans-serif;font-size:13px;background:#f
 .filter-bar{background:#fff;padding:10px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #f0f0f0;flex-shrink:0;}
 .btn-primary{background:#00b3d4;color:#fff;border:none;padding:5px 14px;border-radius:4px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px;}
 .btn-primary:hover{background:#00a0c0;}
-.btn-sort{background:#fff;color:#666;border:1px solid #ddd;padding:5px 14px;border-radius:4px;font-size:12px;cursor:pointer;transition:all .15s;}
-.btn-sort:hover{border-color:#00b3d4;color:#00b3d4;}
-.btn-sort.dirty{background:#00b3d4;color:#fff;border-color:#00b3d4;}
-.btn-sort.dirty:hover{background:#00a0c0;color:#fff;}
 .btn-primary svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.5;}
 
 /* ── Table ── */
@@ -68,10 +64,8 @@ tbody tr:last-child td{border-bottom:none;}
 .tag-on{background:#e8f8e8;color:#52c41a;}
 .tag-off{background:#f5f5f5;color:#999;}
 .id-cell{color:#999;}
+.plat-cell{color:#555;}
 .op-cell .op-link + .op-link{margin-left:8px;}
-.drag-handle{cursor:grab;color:#ccc;font-size:14px;user-select:none;}
-.drag-handle:active{cursor:grabbing;}
-.sortable-ghost{opacity:.4;}
 .ext-title{color:#444;}
 .ext-desc{color:#888;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .op-link{color:#00b3d4;cursor:pointer;font-size:12px;}
@@ -118,11 +112,25 @@ tbody tr:last-child td{border-bottom:none;}
 .switch-label{font-size:12.5px;color:#444;margin-left:8px;line-height:30px;}
 .switch-row{display:flex;align-items:center;}
 
+/* 售卖位置单选 */
+.plat-row{display:flex;gap:8px;}
+.time-cell{color:#999;white-space:nowrap;font-size:12px;}
+.field-tip{font-size:11px;color:#aaa;margin-top:4px;}
+
+/* 二次编辑：仅开放 是否ab/外显标题/外显说明 */
+.restricted-tip{display:none;background:#fff7e6;border:1px solid #ffe3ba;color:#d48806;font-size:12px;padding:8px 12px;border-radius:4px;margin-bottom:16px;}
+.modal.restricted .restricted-tip{display:block;}
+.modal.restricted input:disabled{background:#f5f5f5;color:#999;border-color:#eee;cursor:not-allowed;}
+.modal.restricted .switch{cursor:not-allowed;opacity:.55;}
+.modal.restricted .switch-label{color:#999;}
+
 /* ab group pills */
 .chk-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
 .chk-item{border:1px solid #ddd;border-radius:4px;padding:4px 12px;cursor:pointer;font-size:12px;color:#555;background:#fff;user-select:none;transition:all .15s;}
 .chk-item:hover{border-color:#00b3d4;}
 .chk-item.checked{border-color:#00b3d4;color:#00a0c0;background:#e6f9fb;}
+.chk-disabled{border-color:#eee;color:#ccc;background:#fafafa;cursor:not-allowed;}
+.chk-disabled:hover{border-color:#eee;}
 
 .modal-ft{padding:12px 20px;border-top:1px solid #f0f0f0;display:flex;justify-content:flex-end;gap:8px;flex-shrink:0;}
 .btn-ghost{background:#fff;color:#666;border:1px solid #ddd;padding:6px 16px;border-radius:4px;font-size:12px;cursor:pointer;}
@@ -169,12 +177,11 @@ tbody tr:last-child td{border-bottom:none;}
         <a href="javascript:;">商品管理</a><span class="sep">/</span><span class="cur">会员商品</span>
       </div>
 
-      <!-- Filter -->
+      <!-- Toolbar -->
       <div class="filter-bar">
         <button class="btn-primary" onclick="openModal(-1)">
           <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增商品
         </button>
-        <button class="btn-sort" id="btnSaveSort" onclick="saveSortOrder()">保存排序</button>
       </div>
 
       <!-- Table -->
@@ -183,15 +190,17 @@ tbody tr:last-child td{border-bottom:none;}
           <table>
             <thead>
               <tr>
-                <th style="width:30px;"></th>
                 <th>ID</th>
                 <th>商品名称</th>
                 <th>商品定价</th>
                 <th>商品原价</th>
                 <th>是否连续购买</th>
+                <th>售卖位置</th>
+                <th>排序</th>
                 <th>外显标题</th>
                 <th>外显说明</th>
                 <th>状态</th>
+                <th>创建时间</th>
                 <th style="width:100px;">操作</th>
               </tr>
             </thead>
@@ -217,6 +226,7 @@ tbody tr:last-child td{border-bottom:none;}
       <span class="modal-close" onclick="closeModal()">✕</span>
     </div>
     <div class="modal-bd">
+      <div class="restricted-tip">二次编辑仅支持修改：是否ab、外显标题、外显说明</div>
       <div class="form-row" id="row-name">
         <div class="form-label"><span class="req">*</span>商品名称</div>
         <div class="form-ctrl">
@@ -256,9 +266,30 @@ tbody tr:last-child td{border-bottom:none;}
       </div>
       <div class="form-row">
         <div class="form-label">是否连续购买</div>
-        <div class="form-ctrl switch-row">
-          <div class="switch" id="f-cont" onclick="this.classList.toggle('on')"></div>
-          <span class="switch-label" id="contLabel">否</span>
+        <div class="form-ctrl">
+          <div class="switch-row">
+            <div class="switch" id="f-cont" onclick="toggleCont()"></div>
+            <span class="switch-label" id="contLabel">否</span>
+          </div>
+          <div class="field-tip">鸿蒙系统暂不支持连续购买</div>
+        </div>
+      </div>
+      <div class="form-row" id="row-plat">
+        <div class="form-label"><span class="req">*</span>售卖位置</div>
+        <div class="form-ctrl">
+          <div class="plat-row">
+            <div class="chk-item" id="plat-android" onclick="platClick('android')">安卓</div>
+            <div class="chk-item" id="plat-ios" onclick="platClick('ios')">iOS</div>
+          </div>
+          <div class="err-tip">请选择售卖位置</div>
+        </div>
+      </div>
+      <div class="form-row" id="row-sort">
+        <div class="form-label"><span class="req">*</span>排序</div>
+        <div class="form-ctrl">
+          <input type="number" id="f-sort" placeholder="请输入排序值" min="1" step="1">
+          <div class="field-tip">数值越小越靠前</div>
+          <div class="err-tip">请输入正确的排序值（正整数）</div>
         </div>
       </div>
       <div class="form-row" id="row-ab">
@@ -294,13 +325,12 @@ tbody tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
 <script>
 /* ── Demo data ── */
 let products = [
-  {id:1, name:'连续包月', price:19.9, days:30, oprice:25, on:true, cont:true, ab:false, abGroups:[], etitle:'连续包月', edesc:'到期按19.9/月续费，可随时取消'},
-  {id:2, name:'月卡', price:25, days:30, oprice:'', on:true, cont:false, ab:false, abGroups:[], etitle:'月卡', edesc:'0.83元/天'},
-  {id:3, name:'年卡', price:168, days:365, oprice:'', on:false, cont:false, ab:false, abGroups:[], etitle:'年卡', edesc:'14元/月'},
+  {id:1, name:'连续包月', price:19.9, days:30, oprice:25, on:true, cont:true, platform:'android', sort:1, ctime:'2026-10-12 10:24', edited:false, ab:false, abGroups:[], etitle:'连续包月', edesc:'到期按19.9/月续费，可随时取消'},
+  {id:2, name:'月卡', price:25, days:30, oprice:'', on:true, cont:false, platform:'android', sort:2, ctime:'2026-10-12 10:26', edited:false, ab:false, abGroups:[], etitle:'月卡', edesc:'0.83元/天'},
+  {id:3, name:'年卡', price:168, days:365, oprice:'', on:false, cont:false, platform:'ios', sort:3, ctime:'2026-09-30 18:05', edited:false, ab:false, abGroups:[], etitle:'年卡', edesc:'14元/月'},
 ];
 let nextId = Math.max(...products.map(p => p.id)) + 1;
 let editIndex = -2; // -2 none, -1 add, >=0 edit
@@ -312,22 +342,24 @@ function toggleGroup(){
 
 /* ── Render table ── */
 function render(){
-  const list = products;
+  const list = [...products].sort((a, b) => a.sort - b.sort);
   const tbody = document.getElementById('tbody');
   if(!list.length){
-    tbody.innerHTML = '<tr class="empty-row"><td colspan="10">暂无数据</td></tr>';
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="12">暂无数据</td></tr>';
   }else{
     tbody.innerHTML = list.map(p => `
       <tr>
-        <td><span class="drag-handle" title="拖拽排序">⠿</span></td>
         <td class="id-cell">${p.id}</td>
         <td class="name-cell">${esc(p.name)}</td>
         <td class="price"><span class="yen">¥</span>${fmt(p.price)}</td>
         <td class="price-old">${p.oprice === '' || p.oprice == null ? '—' : '<span class="yen">¥</span>' + fmt(p.oprice)}</td>
         <td><span class="tag ${p.cont?'tag-yes':'tag-no'}">${p.cont?'是':'否'}</span></td>
+        <td class="plat-cell">${p.platform === 'android' ? '安卓' : 'iOS'}</td>
+        <td>${p.sort}</td>
         <td class="ext-title">${esc(p.etitle)}</td>
         <td class="ext-desc" title="${esc(p.edesc)}">${esc(p.edesc)}</td>
         <td><span class="tag ${p.on?'tag-on':'tag-off'}">${p.on?'上架':'下架'}</span></td>
+        <td class="time-cell">${p.ctime}</td>
         <td class="op-cell">
           ${p.on
             ? '<span class="op-link op-disabled" title="上架状态不可编辑，请先下架">编辑</span>'
@@ -352,15 +384,25 @@ function esc(s){ const d = document.createElement('div'); d.textContent = s; ret
 /* ── Modal ── */
 function openModal(idx){
   editIndex = idx;
-  document.getElementById('modalTitle').textContent = idx >= 0 ? '编辑商品' : '新增商品';
-  const p = idx >= 0 ? products[idx] : {name:'',price:'',days:'',oprice:'',cont:false,ab:false,abGroups:[],etitle:'',edesc:''};
+  const isAdd = idx < 0;
+  editRestricted = !isAdd && !!products[idx].edited;
+  document.getElementById('modalTitle').textContent = isAdd ? '新增商品' : '编辑商品';
+  document.getElementById('plat-android').classList.toggle('chk-disabled', editRestricted);
+  document.getElementById('plat-ios').classList.toggle('chk-disabled', editRestricted || isAdd);
+  ['f-name','f-price','f-days','f-oprice','f-sort'].forEach(id => document.getElementById(id).disabled = editRestricted);
+  document.querySelector('#modalMask .modal').classList.toggle('restricted', editRestricted);
+  const p = isAdd
+    ? {name:'', price:'', days:'', oprice:'', sort:'', cont:false, platform:'android', ab:false, abGroups:[], etitle:'', edesc:''}
+    : products[idx];
   document.getElementById('f-name').value = p.name;
   document.getElementById('f-price').value = p.price;
   document.getElementById('f-days').value = p.days;
   document.getElementById('f-oprice').value = p.oprice;
   document.getElementById('f-etitle').value = p.etitle;
   document.getElementById('f-edesc').value = p.edesc;
+  document.getElementById('f-sort').value = p.sort;
   setSwitch(p.cont);
+  setPlat(p.platform || '');
   setAb(p.ab, p.abGroups || []);
   document.querySelectorAll('.form-row').forEach(r => r.classList.remove('error'));
   document.getElementById('modalMask').classList.add('show');
@@ -377,13 +419,32 @@ function setSwitch(on){
   document.getElementById('contLabel').textContent = on ? '是' : '否';
 }
 
-document.getElementById('f-cont').addEventListener('click', function(){
-  document.getElementById('contLabel').textContent = this.classList.contains('on') ? '是' : '否';
-});
+
 
 /* ── 是否ab：开关 + 分组多选 ── */
 const GROUPS = [0,1,2,3,4,5,6,7,8,9];
 let abSel = new Set();
+
+/* ── 售卖位置：单选 ── */
+let platSel = '';
+let editRestricted = false; // 二次编辑：仅开放 是否ab/外显标题/外显说明
+function platClick(v){
+  if(editRestricted) return;
+  if(editIndex < 0 && v === 'ios') return; // 新增时仅支持安卓
+  setPlat(v);
+}
+function toggleCont(){
+  if(editRestricted) return;
+  const sw = document.getElementById('f-cont');
+  sw.classList.toggle('on');
+  document.getElementById('contLabel').textContent = sw.classList.contains('on') ? '是' : '否';
+}
+function setPlat(v){
+  platSel = v;
+  document.getElementById('plat-android').classList.toggle('checked', v === 'android');
+  document.getElementById('plat-ios').classList.toggle('checked', v === 'ios');
+  document.getElementById('row-plat').classList.remove('error');
+}
 
 function initAbGroups(){
   const wrap = document.getElementById('abGroupWrap');
@@ -443,24 +504,33 @@ function save(){
   const abGroups = ab ? [...abSel].sort((a,b) => a - b) : [];
   const etitle = document.getElementById('f-etitle').value.trim();
   const edesc = document.getElementById('f-edesc').value.trim();
+  const sortV = document.getElementById('f-sort').value;
 
   let ok = true;
   const mark = (id, bad) => { document.getElementById(id).classList.toggle('error', bad); if(bad) ok = false; };
   mark('row-name', !name);
   mark('row-price', price === '' || +price < 0);
   mark('row-days', days === '' || +days < 1 || !Number.isInteger(+days));
+  mark('row-plat', !platSel);
+  mark('row-sort', sortV === '' || +sortV < 1 || !Number.isInteger(+sortV));
   mark('row-ab', ab && abGroups.length === 0);
   mark('row-etitle', !etitle);
   mark('row-edesc', !edesc);
   if(!ok) return;
 
-  const item = {id: editIndex >= 0 ? products[editIndex].id : nextId++, name, price:+price, days:+days, oprice: oprice === '' ? '' : +oprice, on: editIndex >= 0 ? products[editIndex].on : false, cont, ab, abGroups, etitle, edesc};
-  if(editIndex >= 0){ products[editIndex] = item; toast('保存成功'); }
-  else { products.unshift(item); toast('新增成功'); }
+  if(editIndex >= 0){
+    const old = products[editIndex];
+    products[editIndex] = {id: old.id, name, price:+price, days:+days, oprice: oprice === '' ? '' : +oprice, on: old.on, platform: platSel, sort:+sortV, ctime: old.ctime, edited: true, cont, ab, abGroups, etitle, edesc};
+    toast('保存成功');
+  }else{
+    const d = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    const ctime = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+    products.unshift({id: nextId++, name, price:+price, days:+days, oprice: oprice === '' ? '' : +oprice, on: false, platform: platSel, sort:+sortV, ctime, cont, ab, abGroups, etitle, edesc});
+    toast('新增成功');
+  }
   closeModal();
   render();
-  snapshotOrder();
-  updateSortBtn();
 }
 
 /* ── Toast ── */
@@ -482,34 +552,7 @@ function toast(msg){
 initAbGroups();
 render();
 
-/* 拖拽排序 */
-if(window.Sortable){
-  new Sortable(document.getElementById('tbody'), {
-    handle: '.drag-handle',
-    draggable: 'tr',
-    filter: '.empty-row',
-    animation: 150,
-    onEnd(evt){
-      if(evt.oldIndex === evt.newIndex) return;
-      const moved = products.splice(evt.oldIndex, 1)[0];
-      products.splice(evt.newIndex, 0, moved);
-      updateSortBtn();
-    }
-  });
-}
-
-/* 保存排序：拖拽仅本地预览，点击按钮才保存 */
-let savedOrder = [];
-function snapshotOrder(){ savedOrder = products.map(p => p.id); }
-function isOrderDirty(){ return JSON.stringify(products.map(p => p.id)) !== JSON.stringify(savedOrder); }
-function updateSortBtn(){ document.getElementById('btnSaveSort').classList.toggle('dirty', isOrderDirty()); }
-function saveSortOrder(){
-  if(!isOrderDirty()){ toast('排序未发生变化'); return; }
-  snapshotOrder();
-  updateSortBtn();
-  toast('排序已保存');
-}
-snapshotOrder();
+render();
 </script>
 </body>
 </html>
