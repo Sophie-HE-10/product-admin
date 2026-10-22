@@ -124,6 +124,40 @@ tbody tr:last-child td{border-bottom:none;}
 .modal.restricted .switch{cursor:not-allowed;opacity:.55;}
 .modal.restricted .switch-label{color:#999;}
 
+/* ── 页面切换 ── */
+.page{display:none;flex:1;flex-direction:column;min-height:0;}
+.page.active{display:flex;}
+
+/* ── 表单页（新增/编辑整页） ── */
+.form-page{flex:1;display:flex;flex-direction:column;min-height:0;background:#fff;}
+.form-page-body{flex:1;overflow-y:auto;padding:24px 32px;}
+.form-page-inner{max-width:560px;}
+.form-page-ft{flex-shrink:0;border-top:1px solid #f0f0f0;padding:12px 32px;display:flex;justify-content:flex-end;gap:8px;}
+
+/* ── 实物商品 ── */
+.thumb{width:36px;height:36px;border-radius:4px;background:linear-gradient(135deg,#f6f7f9,#eceef1);border:1px solid #eee;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;}
+.thumb svg{width:16px;height:16px;stroke:#c3c8cf;fill:none;stroke-width:1.5;}
+.thumb-sm{width:24px;height:24px;border-radius:3px;}
+.thumb-sm svg{width:11px;height:11px;}
+.thumb-row{display:flex;align-items:center;gap:4px;}
+.thumb-count{font-size:11px;color:#999;margin-left:2px;white-space:nowrap;}
+.tag-zi{background:#e6f9fb;color:#00a0c0;}
+.tag-wx{background:#fff3e0;color:#e67e22;}
+.no-img{color:#ccc;}
+
+.form-ctrl select{width:100%;border:1px solid #ddd;border-radius:4px;padding:6px 10px;font-size:12.5px;color:#444;outline:none;font-family:inherit;background:#fff;cursor:pointer;}
+.form-ctrl select:focus{border-color:#00b3d4;}
+
+.upload-box{width:80px;height:80px;border:1px dashed #ccc;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:#999;font-size:11px;position:relative;background:#fafafa;}
+.upload-box:hover{border-color:#00b3d4;color:#00b3d4;}
+.upload-box svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.5;}
+.upload-tile{width:64px;height:64px;border:1px solid #eee;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:default;color:#999;font-size:10px;position:relative;background:linear-gradient(135deg,#f6f7f9,#eceef1);}
+.upload-tile svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.5;}
+.upload-tile.upload-add{border-style:dashed;background:#fafafa;cursor:pointer;}
+.upload-tile.upload-add:hover{border-color:#00b3d4;color:#00b3d4;}
+.upload-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.u-del{position:absolute;top:-7px;right:-7px;width:16px;height:16px;background:#ff4d4f;color:#fff;border-radius:50%;font-size:10px;line-height:16px;text-align:center;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.15);}
+
 /* ab group pills */
 .chk-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
 .chk-item{border:1px solid #ddd;border-radius:4px;padding:4px 12px;cursor:pointer;font-size:12px;color:#555;background:#fff;user-select:none;transition:all .15s;}
@@ -150,13 +184,24 @@ tbody tr:last-child td{border-bottom:none;}
     </div>
     <div class="nav">
       <div class="nav-group open" id="navGroup">
-        <div class="nav-item active" id="navProduct" onclick="toggleGroup()">
+        <div class="nav-item active" id="navProduct" onclick="toggleGroup('navGroup')">
           <svg class="nav-icon" viewBox="0 0 24 24"><path d="M20 7H4v13h16V7z"/><path d="M4 7l2-3h12l2 3"/><path d="M9 12h6"/></svg>
           商品管理
           <span class="arrow">▶</span>
         </div>
         <div class="nav-sub">
-          <div class="nav-item active" style="position:relative;" onclick="toast('一期仅开放「会员商品」，敬请期待')"><span class="dot"></span>会员商品</div>
+          <div class="nav-item active" style="position:relative;" id="navMember" onclick="switchPage('member')">会员商品</div>
+          <div class="nav-item" style="position:relative;" id="navGoods" onclick="switchPage('goods')">实物商品</div>
+        </div>
+      </div>
+      <div class="nav-group open" id="navGroupFin">
+        <div class="nav-item" id="navFinance" onclick="toggleGroup('navGroupFin')">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M5 3l7 9 7-9"/><path d="M12 12v9"/><path d="M8 16h8"/><path d="M8 19.5h8"/></svg>
+          财务管理
+          <span class="arrow">▶</span>
+        </div>
+        <div class="nav-sub">
+          <div class="nav-item" style="position:relative;" id="navOrders" onclick="switchPage('orders')">订单列表</div>
         </div>
       </div>
     </div>
@@ -173,43 +218,196 @@ tbody tr:last-child td{border-bottom:none;}
     </div>
 
     <div class="content-area">
-      <div class="breadcrumb">
+      <div class="breadcrumb" id="breadcrumb">
         <a href="javascript:;">商品管理</a><span class="sep">/</span><span class="cur">会员商品</span>
       </div>
 
-      <!-- Toolbar -->
-      <div class="filter-bar">
-        <button class="btn-primary" onclick="openModal(-1)">
-          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增商品
-        </button>
+      <!-- ═══ 会员商品页 ═══ -->
+      <div class="page active" id="page-member">
+        <div class="filter-bar">
+          <button class="btn-primary" onclick="openModal(-1)">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增商品
+          </button>
+        </div>
+        <div class="table-wrap">
+          <div class="table-card">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>商品名称</th>
+                  <th>商品定价</th>
+                  <th>商品原价</th>
+                  <th>是否连续购买</th>
+                  <th>售卖位置</th>
+                  <th>排序</th>
+                  <th>外显标题</th>
+                  <th>外显说明</th>
+                  <th>状态</th>
+                  <th>创建时间</th>
+                  <th style="width:100px;">操作</th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+            <div class="pager">
+              <span id="pagerInfo">共 0 条</span>
+              <div class="pages">
+                <div class="page-btn cur">1</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Table -->
-      <div class="table-wrap">
-        <div class="table-card">
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>商品名称</th>
-                <th>商品定价</th>
-                <th>商品原价</th>
-                <th>是否连续购买</th>
-                <th>售卖位置</th>
-                <th>排序</th>
-                <th>外显标题</th>
-                <th>外显说明</th>
-                <th>状态</th>
-                <th>创建时间</th>
-                <th style="width:100px;">操作</th>
-              </tr>
-            </thead>
-            <tbody id="tbody"></tbody>
-          </table>
-          <div class="pager">
-            <span id="pagerInfo">共 0 条</span>
-            <div class="pages">
-              <div class="page-btn cur">1</div>
+      <!-- ═══ 实物商品页 ═══ -->
+      <div class="page" id="page-goods">
+        <div class="filter-bar">
+          <button class="btn-primary" onclick="gOpenForm(-1)">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增商品
+          </button>
+        </div>
+        <div class="table-wrap">
+          <div class="table-card">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>商品名称</th>
+                  <th>外显名称</th>
+                  <th>按钮文案</th>
+                  <th>商品定价</th>
+                  <th>商品原价</th>
+                  <th>商品头图</th>
+                  <th>初始销量</th>
+                  <th>商品详情图</th>
+                  <th>商品来源</th>
+                  <th style="width:70px;">操作</th>
+                </tr>
+              </thead>
+              <tbody id="gTbody"></tbody>
+            </table>
+            <div class="pager">
+              <span id="gPagerInfo">共 0 条</span>
+              <div class="pages">
+                <div class="page-btn cur">1</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ 实物商品 新增/编辑页 ═══ -->
+      <div class="page" id="page-goods-form">
+        <div class="form-page">
+          <div class="form-page-body">
+            <div class="form-page-inner">
+              <div class="form-row" id="grow-name">
+                <div class="form-label"><span class="req">*</span>商品名称</div>
+                <div class="form-ctrl">
+                  <input type="text" id="g-name" placeholder="请输入商品名称" maxlength="30">
+                  <div class="err-tip">请输入商品名称</div>
+                </div>
+              </div>
+              <div class="form-row" id="grow-etitle">
+                <div class="form-label"><span class="req">*</span>外显名称</div>
+                <div class="form-ctrl">
+                  <input type="text" id="g-etitle" placeholder="请输入外显名称" maxlength="20">
+                  <div class="err-tip">请输入外显名称</div>
+                </div>
+              </div>
+              <div class="form-row" id="grow-btn">
+                <div class="form-label"><span class="req">*</span>按钮文案</div>
+                <div class="form-ctrl">
+                  <input type="text" id="g-btn" placeholder="请输入按钮文案" maxlength="8">
+                  <div class="field-tip">C端购买按钮上的文字，如「立即购买」</div>
+                  <div class="err-tip">请输入按钮文案</div>
+                </div>
+              </div>
+              <div class="form-row" id="grow-price">
+                <div class="form-label"><span class="req">*</span>商品定价</div>
+                <div class="form-ctrl">
+                  <div class="price-input">
+                    <input type="number" id="g-price" placeholder="请输入定价" min="0" step="0.01">
+                    <span class="unit">元</span>
+                  </div>
+                  <div class="err-tip">请输入正确的定价</div>
+                </div>
+              </div>
+              <div class="form-row" id="grow-oprice">
+                <div class="form-label">商品原价</div>
+                <div class="form-ctrl">
+                  <div class="price-input">
+                    <input type="number" id="g-oprice" placeholder="请输入原价" min="0" step="0.01">
+                    <span class="unit">元</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row" id="grow-head">
+                <div class="form-label"><span class="req">*</span>商品头图</div>
+                <div class="form-ctrl">
+                  <div class="upload-box" id="headImgBox" onclick="if(!gHead){gHead=true;renderUploads();}"></div>
+                  <div class="field-tip">demo 中点击即模拟上传，角标 ✕ 删除</div>
+                  <div class="err-tip">请上传商品头图</div>
+                </div>
+              </div>
+              <div class="form-row" id="grow-sales">
+                <div class="form-label"><span class="req">*</span>初始销量</div>
+                <div class="form-ctrl">
+                  <input type="number" id="g-sales" placeholder="请输入初始销量" min="0" step="1">
+                  <div class="err-tip">请输入正确的初始销量</div>
+                </div>
+              </div>
+              <div class="form-row" id="grow-imgs">
+                <div class="form-label"><span class="req">*</span>商品详情图</div>
+                <div class="form-ctrl">
+                  <div class="upload-grid" id="detailImgGrid"></div>
+                  <div class="field-tip">最多9张，点击 + 添加，角标 ✕ 删除</div>
+                  <div class="err-tip">请至少上传1张详情图</div>
+                </div>
+              </div>
+              <div class="form-row" id="grow-source">
+                <div class="form-label"><span class="req">*</span>商品来源</div>
+                <div class="form-ctrl">
+                  <select id="g-source">
+                    <option value="">请选择</option>
+                    <option value="自选">自选</option>
+                    <option value="网校">网校</option>
+                  </select>
+                  <div class="err-tip">请选择商品来源</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-page-ft">
+            <button class="btn-ghost" onclick="gBackToList()">取消</button>
+            <button class="btn-save" onclick="gSave()">保存</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ 订单列表页 ═══ -->
+      <div class="page" id="page-orders">
+        <div class="table-wrap">
+          <div class="table-card">
+            <table>
+              <thead>
+                <tr>
+                  <th>订单ID</th>
+                  <th>用户ID</th>
+                  <th>商品类型</th>
+                  <th>金额</th>
+                  <th>支付时间</th>
+                  <th>订单状态</th>
+                </tr>
+              </thead>
+              <tbody id="oTbody"></tbody>
+            </table>
+            <div class="pager">
+              <span id="oPagerInfo">共 0 条</span>
+              <div class="pages">
+                <div class="page-btn cur">1</div>
+              </div>
             </div>
           </div>
         </div>
@@ -336,8 +534,176 @@ let nextId = Math.max(...products.map(p => p.id)) + 1;
 let editIndex = -2; // -2 none, -1 add, >=0 edit
 
 /* ── Sidebar ── */
-function toggleGroup(){
-  document.getElementById('navGroup').classList.toggle('open');
+function toggleGroup(id){
+  document.getElementById(id).classList.toggle('open');
+}
+
+/* ── 页面切换：会员商品 / 实物商品 / 实物商品表单页 / 订单列表 ── */
+let currentPage = 'member';
+function switchPage(page){
+  currentPage = page;
+  ['member', 'goods', 'goods-form', 'orders'].forEach(p => document.getElementById('page-' + p).classList.toggle('active', p === page));
+  document.getElementById('navMember').classList.toggle('active', page === 'member');
+  document.getElementById('navGoods').classList.toggle('active', page === 'goods' || page === 'goods-form');
+  document.getElementById('navOrders').classList.toggle('active', page === 'orders');
+  document.getElementById('navProduct').classList.toggle('active', page !== 'orders');
+  document.getElementById('navFinance').classList.toggle('active', page === 'orders');
+  updateBreadcrumb();
+}
+function updateBreadcrumb(){
+  let html;
+  if(currentPage === 'orders'){
+    html = '<a href="javascript:;">财务管理</a><span class="sep">/</span><span class="cur">订单列表</span>';
+  }else{
+    html = '<a href="javascript:;">商品管理</a>';
+    if(currentPage === 'member'){
+      html += '<span class="sep">/</span><span class="cur">会员商品</span>';
+    }else if(currentPage === 'goods'){
+      html += '<span class="sep">/</span><span class="cur">实物商品</span>';
+    }else{
+      html += '<span class="sep">/</span><a href="javascript:;" onclick="switchPage(\'goods\')">实物商品</a>'
+            + '<span class="sep">/</span><span class="cur">' + (gEditIndex >= 0 ? '编辑商品' : '新增商品') + '</span>';
+    }
+  }
+  document.getElementById('breadcrumb').innerHTML = html;
+}
+
+/* ── 实物商品数据 ── */
+let goods = [
+  {id:1, name:'知识手账本', etitle:'学霸养成知识手账', btn:'立即抢购', price:39, oprice:59, headImg:true, sales:1200, imgs:3, source:'网校'},
+  {id:2, name:'错题打印机', etitle:'口袋错题打印机', btn:'立即购买', price:299, oprice:399, headImg:true, sales:356, imgs:2, source:'自选'},
+  {id:3, name:'单词卡片机', etitle:'天天学单词卡', btn:'马上抢', price:129, oprice:169, headImg:true, sales:89, imgs:4, source:'自选'},
+];
+let gNextId = Math.max(...goods.map(g => g.id)) + 1;
+let gEditIndex = -2;
+let gHead = false, gImgs = 0;
+
+const IMG_ICON = '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>';
+
+function gRender(){
+  const tbody = document.getElementById('gTbody');
+  tbody.innerHTML = goods.map(g => {
+    let thumbs = '';
+    for(let i = 0; i < Math.min(g.imgs, 3); i++) thumbs += `<span class="thumb thumb-sm">${IMG_ICON}</span>`;
+    return `
+    <tr>
+      <td class="id-cell">${g.id}</td>
+      <td class="name-cell">${esc(g.name)}</td>
+      <td>${esc(g.etitle)}</td>
+      <td>${esc(g.btn)}</td>
+      <td class="price"><span class="yen">¥</span>${fmt(g.price)}</td>
+      <td class="price-old">${g.oprice === '' || g.oprice == null ? '—' : '<span class="yen">¥</span>' + fmt(g.oprice)}</td>
+      <td>${g.headImg ? `<span class="thumb">${IMG_ICON}</span>` : '<span class="no-img">—</span>'}</td>
+      <td>${Number(g.sales).toLocaleString()}</td>
+      <td><div class="thumb-row">${thumbs}${g.imgs > 0 ? `<span class="thumb-count">共${g.imgs}张</span>` : '<span class="no-img">—</span>'}</div></td>
+      <td><span class="tag ${g.source === '自选' ? 'tag-zi' : 'tag-wx'}">${g.source}</span></td>
+      <td><span class="op-link" onclick="gOpenForm(${goods.indexOf(g)})">编辑</span></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('gPagerInfo').textContent = `共 ${goods.length} 条`;
+}
+
+/* ── 订单数据 ── */
+const ORDER_STATUS = {
+  paid:    {text:'支付成功', cls:'tag-on'},
+  pending: {text:'待支付',   cls:'tag-wx'},
+  refund:  {text:'已退款',   cls:'tag-no'},
+};
+let orders = [
+  {id:'20261020112635001', uid:'1002381', type:'会员商品', amount:19.9, time:'2026-10-20 11:26', status:'paid'},
+  {id:'20261020105210002', uid:'1004217', type:'实物商品', amount:299,  time:'2026-10-20 10:52', status:'paid'},
+  {id:'20261020093847003', uid:'1003856', type:'会员商品', amount:168,  time:'2026-10-20 09:38', status:'pending'},
+  {id:'20261019181222004', uid:'1001290', type:'实物商品', amount:39,   time:'2026-10-19 18:12', status:'refund'},
+  {id:'20261019154708005', uid:'1005842', type:'会员商品', amount:25,   time:'2026-10-19 15:47', status:'paid'},
+  {id:'20261018113256006', uid:'1006733', type:'实物商品', amount:129,  time:'2026-10-18 11:32', status:'paid'},
+];
+function oRender(){
+  document.getElementById('oTbody').innerHTML = orders.map(o => {
+    const st = ORDER_STATUS[o.status];
+    return `
+    <tr>
+      <td class="id-cell">${o.id}</td>
+      <td class="id-cell">${o.uid}</td>
+      <td>${esc(o.type)}</td>
+      <td class="price"><span class="yen">¥</span>${fmt(o.amount)}</td>
+      <td>${o.time}</td>
+      <td><span class="tag ${st.cls}">${st.text}</span></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('oPagerInfo').textContent = `共 ${orders.length} 条`;
+}
+
+function renderUploads(){
+  const box = document.getElementById('headImgBox');
+  box.classList.toggle('has', gHead);
+  box.innerHTML = gHead
+    ? `${IMG_ICON}<span>已上传</span><span class="u-del" onclick="event.stopPropagation();gHead=false;renderUploads();document.getElementById('grow-head').classList.remove('error')">✕</span>`
+    : `${IMG_ICON}<span>上传图片</span>`;
+
+  let html = '';
+  for(let i = 0; i < gImgs; i++){
+    html += `<div class="upload-tile">${IMG_ICON}<span class="u-del" onclick="event.stopPropagation();gImgs--;renderUploads();document.getElementById('grow-imgs').classList.remove('error')">✕</span></div>`;
+  }
+  if(gImgs < 9){
+    html += '<div class="upload-tile upload-add" onclick="gImgs++;renderUploads();document.getElementById(\'grow-imgs\').classList.remove(\'error\')"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>添加</span></div>';
+  }
+  document.getElementById('detailImgGrid').innerHTML = html;
+}
+
+function gOpenForm(idx){
+  gEditIndex = idx;
+  const g = idx >= 0 ? goods[idx] : {name:'', etitle:'', btn:'', price:'', oprice:'', headImg:false, sales:'', imgs:0, source:''};
+  document.getElementById('g-name').value = g.name;
+  document.getElementById('g-etitle').value = g.etitle;
+  document.getElementById('g-btn').value = g.btn;
+  document.getElementById('g-price').value = g.price;
+  document.getElementById('g-oprice').value = g.oprice;
+  document.getElementById('g-sales').value = g.sales;
+  document.getElementById('g-source').value = g.source;
+  gHead = !!g.headImg;
+  gImgs = g.imgs || 0;
+  document.querySelectorAll('#page-goods-form .form-row').forEach(r => r.classList.remove('error'));
+  renderUploads();
+  switchPage('goods-form');
+}
+
+function gBackToList(){
+  gEditIndex = -2;
+  switchPage('goods');
+}
+
+function gSave(){
+  const name = document.getElementById('g-name').value.trim();
+  const etitle = document.getElementById('g-etitle').value.trim();
+  const btn = document.getElementById('g-btn').value.trim();
+  const price = document.getElementById('g-price').value;
+  const oprice = document.getElementById('g-oprice').value;
+  const sales = document.getElementById('g-sales').value;
+  const source = document.getElementById('g-source').value;
+
+  let ok = true;
+  const mark = (id, bad) => { document.getElementById(id).classList.toggle('error', bad); if(bad) ok = false; };
+  mark('grow-name', !name);
+  mark('grow-etitle', !etitle);
+  mark('grow-btn', !btn);
+  mark('grow-price', price === '' || +price < 0);
+  mark('grow-head', !gHead);
+  mark('grow-sales', sales === '' || +sales < 0 || !Number.isInteger(+sales));
+  mark('grow-imgs', gImgs < 1);
+  mark('grow-source', !source);
+  if(!ok) return;
+
+  const item = {name, etitle, btn, price:+price, oprice: oprice === '' ? '' : +oprice, headImg:gHead, sales:+sales, imgs:gImgs, source};
+  if(gEditIndex >= 0){
+    goods[gEditIndex] = {id: goods[gEditIndex].id, ...item};
+    toast('保存成功');
+  }else{
+    goods.unshift({id: gNextId++, ...item});
+    toast('新增成功');
+  }
+  gEditIndex = -2;
+  gRender();
+  switchPage('goods');
 }
 
 /* ── Render table ── */
@@ -551,8 +917,9 @@ function toast(msg){
 
 initAbGroups();
 render();
-
-render();
+gRender();
+renderUploads();
+oRender();
 </script>
 </body>
 </html>
