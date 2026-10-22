@@ -445,11 +445,20 @@ tbody tr:last-child td{border-bottom:none;}
       <div class="form-row" id="row-days">
         <div class="form-label"><span class="req">*</span>会员天数</div>
         <div class="form-ctrl">
-          <div class="price-input">
-            <input type="number" id="f-days" placeholder="请输入会员天数" min="1" step="1">
-            <span class="unit">天</span>
-          </div>
-          <div class="err-tip">请输入正确的会员天数</div>
+          <select id="f-days">
+            <option value="">请选择会员天数</option>
+            <option>3天</option>
+            <option>7天</option>
+            <option>1个月</option>
+            <option>3个月</option>
+            <option>6个月</option>
+            <option>1年</option>
+            <option>14个月</option>
+            <option>1年6个月</option>
+            <option>2年</option>
+            <option>3年</option>
+          </select>
+          <div class="err-tip">请选择会员天数</div>
         </div>
       </div>
       <div class="form-row" id="row-oprice">
@@ -526,9 +535,9 @@ tbody tr:last-child td{border-bottom:none;}
 <script>
 /* ── Demo data ── */
 let products = [
-  {id:1, name:'连续包月', price:19.9, days:30, oprice:25, on:true, cont:true, platform:'android', sort:1, ctime:'2026-10-12 10:24', edited:false, ab:false, abGroups:[], etitle:'连续包月', edesc:'到期按19.9/月续费，可随时取消'},
-  {id:2, name:'月卡', price:25, days:30, oprice:'', on:true, cont:false, platform:'android', sort:2, ctime:'2026-10-12 10:26', edited:false, ab:false, abGroups:[], etitle:'月卡', edesc:'0.83元/天'},
-  {id:3, name:'年卡', price:168, days:365, oprice:'', on:false, cont:false, platform:'ios', sort:3, ctime:'2026-09-30 18:05', edited:false, ab:false, abGroups:[], etitle:'年卡', edesc:'14元/月'},
+  {id:1, name:'连续包月', price:19.9, days:'1个月', oprice:25, on:true, cont:true, platform:'android', sort:1, ctime:'2026-10-12 10:24', edited:false, ab:false, abGroups:[], etitle:'连续包月', edesc:'到期按19.9/月续费，可随时取消'},
+  {id:2, name:'月卡', price:25, days:'1个月', oprice:'', on:true, cont:false, platform:'android', sort:2, ctime:'2026-10-12 10:26', edited:false, ab:false, abGroups:[], etitle:'月卡', edesc:'0.83元/天'},
+  {id:3, name:'年卡', price:168, days:'1年', oprice:'', on:false, cont:false, platform:'ios', sort:3, ctime:'2026-09-30 18:05', edited:false, ab:false, abGroups:[], etitle:'年卡', edesc:'14元/月'},
 ];
 let nextId = Math.max(...products.map(p => p.id)) + 1;
 let editIndex = -2; // -2 none, -1 add, >=0 edit
@@ -876,7 +885,7 @@ function save(){
   const mark = (id, bad) => { document.getElementById(id).classList.toggle('error', bad); if(bad) ok = false; };
   mark('row-name', !name);
   mark('row-price', price === '' || +price < 0);
-  mark('row-days', days === '' || +days < 1 || !Number.isInteger(+days));
+  mark('row-days', days === '');
   mark('row-plat', !platSel);
   mark('row-sort', sortV === '' || +sortV < 1 || !Number.isInteger(+sortV));
   mark('row-ab', ab && abGroups.length === 0);
@@ -886,13 +895,13 @@ function save(){
 
   if(editIndex >= 0){
     const old = products[editIndex];
-    products[editIndex] = {id: old.id, name, price:+price, days:+days, oprice: oprice === '' ? '' : +oprice, on: old.on, platform: platSel, sort:+sortV, ctime: old.ctime, edited: true, cont, ab, abGroups, etitle, edesc};
+    products[editIndex] = {id: old.id, name, price:+price, days, oprice: oprice === '' ? '' : +oprice, on: old.on, platform: platSel, sort:+sortV, ctime: old.ctime, edited: true, cont, ab, abGroups, etitle, edesc};
     toast('保存成功');
   }else{
     const d = new Date();
     const pad = n => String(n).padStart(2, '0');
     const ctime = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
-    products.unshift({id: nextId++, name, price:+price, days:+days, oprice: oprice === '' ? '' : +oprice, on: false, platform: platSel, sort:+sortV, ctime, cont, ab, abGroups, etitle, edesc});
+    products.unshift({id: nextId++, name, price:+price, days, oprice: oprice === '' ? '' : +oprice, on: false, platform: platSel, sort:+sortV, ctime, cont, ab, abGroups, etitle, edesc});
     toast('新增成功');
   }
   closeModal();
