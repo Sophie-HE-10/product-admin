@@ -40,7 +40,16 @@ body{font-family:'Microsoft YaHei',Arial,sans-serif;font-size:13px;background:#f
 .breadcrumb .cur{color:#555;}
 
 /* ── Filter bar ── */
-.filter-bar{background:#fff;padding:10px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #f0f0f0;flex-shrink:0;}
+.filter-bar{background:#fff;padding:10px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #f0f0f0;flex-shrink:0;flex-wrap:wrap;}
+.filter-bar .f-label{font-size:12.5px;color:#666;flex-shrink:0;}
+.filter-bar .search-input{border:1px solid #ddd;border-radius:4px;padding:5px 10px;font-size:12.5px;color:#444;outline:none;width:130px;font-family:inherit;}
+.filter-bar .search-input:focus{border-color:#00b3d4;}
+.filter-bar select{border:1px solid #ddd;border-radius:4px;padding:5px 8px;font-size:12.5px;color:#444;outline:none;font-family:inherit;background:#fff;cursor:pointer;}
+.filter-bar select:focus{border-color:#00b3d4;}
+.filter-bar .btn-search{background:#00b3d4;color:#fff;border:none;padding:5px 14px;border-radius:4px;font-size:12px;cursor:pointer;}
+.filter-bar .btn-search:hover{background:#00a0c0;}
+.filter-bar .btn-ghost{padding:5px 14px;}
+.filter-bar .spacer{flex:1;}
 .btn-primary{background:#00b3d4;color:#fff;border:none;padding:5px 14px;border-radius:4px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px;}
 .btn-primary:hover{background:#00a0c0;}
 .btn-primary svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.5;}
@@ -116,6 +125,10 @@ tbody tr:last-child td{border-bottom:none;}
 .plat-row{display:flex;gap:8px;}
 .time-cell{color:#999;white-space:nowrap;font-size:12px;}
 .field-tip{font-size:11px;color:#aaa;margin-top:4px;}
+.help-tip{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1px solid #bbb;border-radius:50%;color:#999;font-size:10px;cursor:help;margin-left:4px;position:relative;vertical-align:middle;font-weight:normal;}
+.help-tip:hover{border-color:#00b3d4;color:#00b3d4;}
+.help-tip::after{content:attr(data-tip);display:none;position:absolute;left:24px;top:50%;transform:translateY(-50%);background:#333;color:#fff;font-size:11px;line-height:1.5;padding:6px 10px;border-radius:4px;white-space:nowrap;z-index:50;font-weight:normal;box-shadow:0 2px 8px rgba(0,0,0,.2);}
+.help-tip:hover::after{display:block;}
 
 /* 二次编辑：仅开放 是否ab/外显标题/外显说明 */
 .restricted-tip{display:none;background:#fff7e6;border:1px solid #ffe3ba;color:#d48806;font-size:12px;padding:8px 12px;border-radius:4px;margin-bottom:16px;}
@@ -128,18 +141,53 @@ tbody tr:last-child td{border-bottom:none;}
 .page{display:none;flex:1;flex-direction:column;min-height:0;}
 .page.active{display:flex;}
 
-/* ── 表单页（新增/编辑整页） ── */
-.form-page{flex:1;display:flex;flex-direction:column;min-height:0;background:#fff;}
-.form-page-body{flex:1;overflow-y:auto;padding:24px 32px;}
-.form-page-inner{max-width:560px;}
-.form-page-ft{flex-shrink:0;border-top:1px solid #f0f0f0;padding:12px 32px;display:flex;justify-content:flex-end;gap:8px;}
+/* ── 右侧抽屉（挂链） ── */
+.attach-prod{font-size:13px;color:#333;background:#f7f9fa;border-radius:4px;padding:8px 12px;margin-bottom:12px;}
+.attach-toolbar{display:flex;gap:8px;margin-bottom:14px;}
+.attach-sec{font-size:13px;font-weight:600;color:#222;margin-bottom:6px;}
+.attach-tabs{display:flex;border-bottom:1px solid #eee;margin-bottom:14px;}
+.attach-tab{padding:8px 16px;font-size:13px;color:#666;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;}
+.attach-tab:hover{color:#00b3d4;}
+.attach-tab.active{color:#00b3d4;border-bottom-color:#00b3d4;font-weight:600;}
+.stat-cell{white-space:nowrap;line-height:1.6;}
+.stat-cell .lbl{display:inline-block;color:#aaa;font-size:10px;margin-right:3px;}
+.pick-list{border:1px solid #eee;border-radius:4px;max-height:160px;overflow-y:auto;margin-top:6px;display:none;}
+.pick-list.show{display:block;}
+.pick-item{padding:7px 10px;font-size:12px;color:#444;cursor:pointer;display:flex;gap:10px;}
+.pick-item:hover{background:#f0fbfc;}
+.pick-item.sel{background:#e6f9fb;color:#00a0c0;}
+.pick-item .pid{color:#999;flex-shrink:0;}
+.pick-empty{padding:10px;color:#bbb;font-size:12px;text-align:center;}
+.attach-count{font-weight:400;font-size:12px;color:#999;margin-left:4px;}
+.attach-table th{padding:8px 10px;}
+.attach-table td{padding:8px 10px;}
+.modal-sm{width:400px;}
+.confirm-text{font-size:13px;color:#444;padding:10px 0 4px;}
+.tpl-dl{display:inline-flex;align-items:center;gap:5px;}
+.tpl-dl svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;}
+.tpl-upload{margin-top:12px;border:1px dashed #ccc;border-radius:6px;padding:18px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;color:#999;font-size:12px;background:#fafafa;}
+.tpl-upload:hover{border-color:#00b3d4;color:#00b3d4;}
+.tpl-upload svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5;}
 
-/* ── 实物商品 ── */
+/* ── 抽屉通用 ── */
+.drawer-mask{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .25s;z-index:90;}
+.drawer-mask.show{opacity:1;pointer-events:auto;}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:880px;max-width:94vw;background:#fff;box-shadow:-4px 0 16px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .25s;z-index:100;display:flex;flex-direction:column;}
+.drawer.show{transform:translateX(0);}
+.drawer-hd{flex-shrink:0;padding:14px 24px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between;}
+.drawer-title{font-size:15px;font-weight:600;}
+.drawer-close{cursor:pointer;color:#999;font-size:16px;line-height:1;}
+.drawer-close:hover{color:#333;}
+.drawer-body{flex:1;overflow-y:auto;padding:24px;}
+.drawer-ft{flex-shrink:0;border-top:1px solid #f0f0f0;padding:12px 24px;display:flex;justify-content:flex-end;gap:8px;}
+
+/* ── 外链商品 ── */
 .thumb{width:36px;height:36px;border-radius:4px;background:linear-gradient(135deg,#f6f7f9,#eceef1);border:1px solid #eee;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;}
 .thumb svg{width:16px;height:16px;stroke:#c3c8cf;fill:none;stroke-width:1.5;}
 .thumb-sm{width:24px;height:24px;border-radius:3px;}
 .thumb-sm svg{width:11px;height:11px;}
 .thumb-row{display:flex;align-items:center;gap:4px;}
+.thumb-img{width:100%;height:100%;object-fit:cover;border-radius:3px;display:block;}
 .thumb-count{font-size:11px;color:#999;margin-left:2px;white-space:nowrap;}
 .tag-zi{background:#e6f9fb;color:#00a0c0;}
 .tag-wx{background:#fff3e0;color:#e67e22;}
@@ -147,6 +195,10 @@ tbody tr:last-child td{border-bottom:none;}
 
 .form-ctrl select{width:100%;border:1px solid #ddd;border-radius:4px;padding:6px 10px;font-size:12.5px;color:#444;outline:none;font-family:inherit;background:#fff;cursor:pointer;}
 .form-ctrl select:focus{border-color:#00b3d4;}
+.date-range{display:flex;align-items:center;gap:8px;}
+.date-range input{flex:1;border:1px solid #ddd;border-radius:4px;padding:5px 8px;font-size:12.5px;color:#444;outline:none;font-family:inherit;}
+.date-range input:focus{border-color:#00b3d4;}
+.date-sep{color:#999;font-size:12px;flex-shrink:0;}
 
 .upload-box{width:80px;height:80px;border:1px dashed #ccc;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:#999;font-size:11px;position:relative;background:#fafafa;}
 .upload-box:hover{border-color:#00b3d4;color:#00b3d4;}
@@ -154,11 +206,23 @@ tbody tr:last-child td{border-bottom:none;}
 .upload-tile{width:64px;height:64px;border:1px solid #eee;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:default;color:#999;font-size:10px;position:relative;background:linear-gradient(135deg,#f6f7f9,#eceef1);}
 .upload-tile svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.5;}
 .upload-tile.upload-add{border-style:dashed;background:#fafafa;cursor:pointer;}
+.upload-tile.tile-img{background-size:cover;background-position:center;border-radius:6px;}
 .upload-tile.upload-add:hover{border-color:#00b3d4;color:#00b3d4;}
 .upload-grid{display:flex;flex-wrap:wrap;gap:8px;}
 .u-del{position:absolute;top:-7px;right:-7px;width:16px;height:16px;background:#ff4d4f;color:#fff;border-radius:50%;font-size:10px;line-height:16px;text-align:center;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.15);}
 
 /* ab group pills */
+.drag-handle{cursor:grab;color:#bbb;font-size:15px;user-select:none;line-height:1;}
+.drag-handle:active{cursor:grabbing;}
+#bTbody tr[draggable="true"]{cursor:default;}
+#bTbody tr.drag-over td{border-top:2px solid #00b3d4;}
+.ms-box{position:relative;display:inline-block;width:100%;max-width:360px;border:1px solid #ddd;border-radius:4px;padding:6px 10px;font-size:13px;background:#fff;cursor:pointer;user-select:none;box-sizing:border-box;}
+.ms-box .ms-arrow{float:right;color:#999;font-size:10px;margin-top:2px;}
+.ms-panel{display:none;position:absolute;top:calc(100% + 4px);left:-1px;right:-1px;background:#fff;border:1px solid #ddd;border-radius:4px;box-shadow:0 4px 12px rgba(0,0,0,.08);padding:6px 0;max-height:220px;overflow-y:auto;z-index:20;}
+.ms-panel.show{display:block;}
+.ms-item{display:flex;align-items:center;gap:8px;padding:6px 12px;font-size:13px;color:#444;cursor:pointer;}
+.ms-item:hover{background:#f5f5f5;}
+.ms-item input{cursor:pointer;}
 .chk-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
 .chk-item{border:1px solid #ddd;border-radius:4px;padding:4px 12px;cursor:pointer;font-size:12px;color:#555;background:#fff;user-select:none;transition:all .15s;}
 .chk-item:hover{border-color:#00b3d4;}
@@ -171,6 +235,7 @@ tbody tr:last-child td{border-bottom:none;}
 .btn-ghost:hover{border-color:#00b3d4;color:#00b3d4;}
 .btn-save{background:#00b3d4;color:#fff;border:none;padding:6px 18px;border-radius:4px;font-size:12px;cursor:pointer;}
 .btn-save:hover{background:#00a0c0;}
+.btn-save:disabled{background:#c8ecf2;cursor:not-allowed;}
 </style>
 </head>
 <body>
@@ -191,17 +256,17 @@ tbody tr:last-child td{border-bottom:none;}
         </div>
         <div class="nav-sub">
           <div class="nav-item active" style="position:relative;" id="navMember" onclick="switchPage('member')">会员商品</div>
-          <div class="nav-item" style="position:relative;" id="navGoods" onclick="switchPage('goods')">实物商品</div>
+          <div class="nav-item" style="position:relative;" id="navGoods" onclick="switchPage('goods')">外链商品</div>
         </div>
       </div>
-      <div class="nav-group open" id="navGroupFin">
-        <div class="nav-item" id="navFinance" onclick="toggleGroup('navGroupFin')">
-          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M5 3l7 9 7-9"/><path d="M12 12v9"/><path d="M8 16h8"/><path d="M8 19.5h8"/></svg>
-          财务管理
+      <div class="nav-group open" id="navGroupOps">
+        <div class="nav-item" id="navOps" onclick="toggleGroup('navGroupOps')">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 10v4l10 4V6L4 10z"/><path d="M17 9a4 4 0 010 6"/><path d="M6 18l1 3"/></svg>
+          产品运营
           <span class="arrow">▶</span>
         </div>
         <div class="nav-sub">
-          <div class="nav-item" style="position:relative;" id="navOrders" onclick="switchPage('orders')">订单列表</div>
+          <div class="nav-item" style="position:relative;" id="navBanner" onclick="switchPage('banner')">微课banner运营</div>
         </div>
       </div>
     </div>
@@ -224,11 +289,6 @@ tbody tr:last-child td{border-bottom:none;}
 
       <!-- ═══ 会员商品页 ═══ -->
       <div class="page active" id="page-member">
-        <div class="filter-bar">
-          <button class="btn-primary" onclick="openModal(-1)">
-            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增商品
-          </button>
-        </div>
         <div class="table-wrap">
           <div class="table-card">
             <table>
@@ -260,9 +320,32 @@ tbody tr:last-child td{border-bottom:none;}
         </div>
       </div>
 
-      <!-- ═══ 实物商品页 ═══ -->
+      <!-- ═══ 外链商品页 ═══ -->
       <div class="page" id="page-goods">
         <div class="filter-bar">
+          <span class="f-label">商品ID</span>
+          <input class="search-input" id="gSearchId" placeholder="请输入" onkeydown="if(event.key==='Enter')gRender()">
+          <span class="f-label">商品名称</span>
+          <input class="search-input" id="gSearchName" placeholder="请输入" onkeydown="if(event.key==='Enter')gRender()">
+          <span class="f-label">外链</span>
+          <input class="search-input" id="gSearchLink" placeholder="请输入" onkeydown="if(event.key==='Enter')gRender()">
+          <span class="f-label">商品类型</span>
+          <select id="gSearchType">
+            <option value="">请选择</option>
+            <option value="0元leads">0元leads</option>
+            <option value="付费leads">付费leads</option>
+            <option value="付费商品">付费商品</option>
+          </select>
+          <span class="f-label">状态</span>
+          <select id="gSearchStatus">
+            <option value="">请选择</option>
+            <option value="notstarted">未生效</option>
+            <option value="active">生效中</option>
+            <option value="expired">已失效</option>
+          </select>
+          <button class="btn-search" onclick="gRender()">查询</button>
+          <button class="btn-ghost" onclick="gResetSearch()">重置</button>
+          <div class="spacer"></div>
           <button class="btn-primary" onclick="gOpenForm(-1)">
             <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增商品
           </button>
@@ -272,17 +355,17 @@ tbody tr:last-child td{border-bottom:none;}
             <table>
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th>商品ID</th>
                   <th>商品名称</th>
-                  <th>外显名称</th>
-                  <th>按钮文案</th>
-                  <th>商品定价</th>
-                  <th>商品原价</th>
-                  <th>商品头图</th>
-                  <th>初始销量</th>
-                  <th>商品详情图</th>
-                  <th>商品来源</th>
-                  <th style="width:70px;">操作</th>
+                  <th>入口图</th>
+                  <th>商品小图</th>
+                  <th>外链</th>
+                  <th>累计曝光PV/UV</th>
+                  <th>累计点击PV/UV</th>
+                  <th>商品类型</th>
+                  <th>有效期</th>
+                  <th>状态</th>
+                  <th style="width:100px;">操作</th>
                 </tr>
               </thead>
               <tbody id="gTbody"></tbody>
@@ -297,114 +380,54 @@ tbody tr:last-child td{border-bottom:none;}
         </div>
       </div>
 
-      <!-- ═══ 实物商品 新增/编辑页 ═══ -->
-      <div class="page" id="page-goods-form">
-        <div class="form-page">
-          <div class="form-page-body">
-            <div class="form-page-inner">
-              <div class="form-row" id="grow-name">
-                <div class="form-label"><span class="req">*</span>商品名称</div>
-                <div class="form-ctrl">
-                  <input type="text" id="g-name" placeholder="请输入商品名称" maxlength="30">
-                  <div class="err-tip">请输入商品名称</div>
-                </div>
-              </div>
-              <div class="form-row" id="grow-etitle">
-                <div class="form-label"><span class="req">*</span>外显名称</div>
-                <div class="form-ctrl">
-                  <input type="text" id="g-etitle" placeholder="请输入外显名称" maxlength="20">
-                  <div class="err-tip">请输入外显名称</div>
-                </div>
-              </div>
-              <div class="form-row" id="grow-btn">
-                <div class="form-label"><span class="req">*</span>按钮文案</div>
-                <div class="form-ctrl">
-                  <input type="text" id="g-btn" placeholder="请输入按钮文案" maxlength="8">
-                  <div class="field-tip">C端购买按钮上的文字，如「立即购买」</div>
-                  <div class="err-tip">请输入按钮文案</div>
-                </div>
-              </div>
-              <div class="form-row" id="grow-price">
-                <div class="form-label"><span class="req">*</span>商品定价</div>
-                <div class="form-ctrl">
-                  <div class="price-input">
-                    <input type="number" id="g-price" placeholder="请输入定价" min="0" step="0.01">
-                    <span class="unit">元</span>
-                  </div>
-                  <div class="err-tip">请输入正确的定价</div>
-                </div>
-              </div>
-              <div class="form-row" id="grow-oprice">
-                <div class="form-label">商品原价</div>
-                <div class="form-ctrl">
-                  <div class="price-input">
-                    <input type="number" id="g-oprice" placeholder="请输入原价" min="0" step="0.01">
-                    <span class="unit">元</span>
-                  </div>
-                </div>
-              </div>
-              <div class="form-row" id="grow-head">
-                <div class="form-label"><span class="req">*</span>商品头图</div>
-                <div class="form-ctrl">
-                  <div class="upload-box" id="headImgBox" onclick="if(!gHead){gHead=true;renderUploads();}"></div>
-                  <div class="field-tip">demo 中点击即模拟上传，角标 ✕ 删除</div>
-                  <div class="err-tip">请上传商品头图</div>
-                </div>
-              </div>
-              <div class="form-row" id="grow-sales">
-                <div class="form-label"><span class="req">*</span>初始销量</div>
-                <div class="form-ctrl">
-                  <input type="number" id="g-sales" placeholder="请输入初始销量" min="0" step="1">
-                  <div class="err-tip">请输入正确的初始销量</div>
-                </div>
-              </div>
-              <div class="form-row" id="grow-imgs">
-                <div class="form-label"><span class="req">*</span>商品详情图</div>
-                <div class="form-ctrl">
-                  <div class="upload-grid" id="detailImgGrid"></div>
-                  <div class="field-tip">最多9张，点击 + 添加，角标 ✕ 删除</div>
-                  <div class="err-tip">请至少上传1张详情图</div>
-                </div>
-              </div>
-              <div class="form-row" id="grow-source">
-                <div class="form-label"><span class="req">*</span>商品来源</div>
-                <div class="form-ctrl">
-                  <select id="g-source">
-                    <option value="">请选择</option>
-                    <option value="自选">自选</option>
-                    <option value="网校">网校</option>
-                  </select>
-                  <div class="err-tip">请选择商品来源</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="form-page-ft">
-            <button class="btn-ghost" onclick="gBackToList()">取消</button>
-            <button class="btn-save" onclick="gSave()">保存</button>
-          </div>
+      <!-- ═══ 微课banner运营页 ═══ -->
+      <div class="page" id="page-banner">
+        <div class="filter-bar">
+          <span class="f-label">BannerID</span>
+          <input class="search-input" id="bSearchId" placeholder="请输入" onkeydown="if(event.key==='Enter')bRender()">
+          <span class="f-label">Banner名称</span>
+          <input class="search-input" id="bSearchName" placeholder="请输入" onkeydown="if(event.key==='Enter')bRender()">
+          <span class="f-label">状态</span>
+          <select id="bSearchStatus">
+            <option value="">请选择</option>
+            <option value="notstarted">未生效</option>
+            <option value="active">生效中</option>
+            <option value="expired">已失效</option>
+          </select>
+          <button class="btn-search" onclick="bRender()">查询</button>
+          <button class="btn-ghost" onclick="bResetSearch()">重置</button>
+          <button class="btn-primary" id="bSaveSortBtn" style="display:none;" onclick="bSaveSort()">
+            <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>保存排序
+          </button>
+          <div class="spacer"></div>
+          <button class="btn-primary" onclick="bOpenForm(-1)">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增banner
+          </button>
         </div>
-      </div>
-
-      <!-- ═══ 订单列表页 ═══ -->
-      <div class="page" id="page-orders">
         <div class="table-wrap">
           <div class="table-card">
             <table>
               <thead>
                 <tr>
-                  <th>订单ID</th>
-                  <th>用户ID</th>
-                  <th>商品类型</th>
-                  <th>金额</th>
-                  <th>支付时间</th>
-                  <th>订单状态</th>
+                  <th style="width:36px;"></th>
+                  <th>BannerID</th>
+                  <th>排序</th>
+                  <th>Banner名称</th>
+                  <th>图片</th>
+                  <th>累计曝光PV/UV</th>
+                  <th>累计点击PV/UV</th>
+                  <th>跳转类型</th>
+                  <th>跳转目标</th>
+                  <th>AB组</th>
+                  <th>有效期</th>
+                  <th>状态</th>
+                  <th>操作</th>
                 </tr>
               </thead>
-              <tbody id="oTbody"></tbody>
+              <tbody id="bTbody"></tbody>
             </table>
             <div class="pager">
-              <span id="oPagerInfo">共 0 条</span>
+              <span id="bPagerInfo">共 0 条</span>
               <div class="pages">
                 <div class="page-btn cur">1</div>
               </div>
@@ -412,6 +435,345 @@ tbody tr:last-child td{border-bottom:none;}
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 挂链抽屉 ═══ -->
+<div class="drawer-mask" id="attachMask">
+  <div class="drawer">
+    <div class="drawer-hd">
+      <div class="drawer-title">挂链</div>
+      <span class="drawer-close" onclick="closeAttach()">✕</span>
+    </div>
+    <div class="drawer-body">
+      <div class="attach-prod" id="attachProd"></div>
+      <div class="attach-tabs">
+        <div class="attach-tab active" id="attachTabAuthor" onclick="switchAttachTab('author')">博主挂链</div>
+        <div class="attach-tab" id="attachTabCol" onclick="switchAttachTab('col')">合集挂链</div>
+        <div class="attach-tab" id="attachTabVideo" onclick="switchAttachTab('video')">视频挂链</div>
+      </div>
+      <div id="attachPanelAuthor">
+        <div class="attach-toolbar">
+          <span class="f-label">ID</span>
+          <input class="search-input" id="authorSearchId" placeholder="请输入" oninput="renderAttachTable()">
+          <span class="f-label">昵称</span>
+          <input class="search-input" id="authorSearchName" placeholder="请输入" oninput="renderAttachTable()">
+          <button class="btn-primary" onclick="openAddDrawer('author')">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增挂链博主
+          </button>
+        </div>
+        <div class="attach-sec">已挂博主<span class="attach-count" id="authorAttachCount"></span></div>
+        <table class="attach-table">
+          <thead>
+            <tr>
+              <th>博主ID</th>
+              <th>博主昵称</th>
+              <th>累计曝光PV/UV</th>
+              <th>累计点击PV/UV</th>
+              <th style="width:70px;">操作</th>
+            </tr>
+          </thead>
+          <tbody id="authorAttachTbody"></tbody>
+        </table>
+      </div>
+      <div id="attachPanelCol" style="display:none;">
+        <div class="attach-toolbar">
+          <span class="f-label">ID</span>
+          <input class="search-input" id="colSearchId" placeholder="请输入" oninput="renderAttachTable()">
+          <span class="f-label">合集名称</span>
+          <input class="search-input" id="colSearchName" placeholder="请输入" oninput="renderAttachTable()">
+          <button class="btn-primary" onclick="openAddDrawer('col')">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增挂链合集
+          </button>
+        </div>
+        <div class="attach-sec">已挂合集<span class="attach-count" id="colAttachCount"></span></div>
+        <table class="attach-table">
+          <thead>
+            <tr>
+              <th>合集ID</th>
+              <th>合集名称</th>
+              <th>累计曝光PV/UV</th>
+              <th>累计点击PV/UV</th>
+              <th style="width:70px;">操作</th>
+            </tr>
+          </thead>
+          <tbody id="colAttachTbody"></tbody>
+        </table>
+      </div>
+      <div id="attachPanelVideo" style="display:none;">
+        <div class="attach-toolbar">
+          <span class="f-label">ID</span>
+          <input class="search-input" id="videoSearchId" placeholder="请输入" oninput="renderAttachTable()">
+          <span class="f-label">视频名称</span>
+          <input class="search-input" id="videoSearchName" placeholder="请输入" oninput="renderAttachTable()">
+          <button class="btn-primary" onclick="openAddDrawer('video')">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增挂链视频
+          </button>
+        </div>
+        <div class="attach-sec">已挂视频<span class="attach-count" id="attachCount"></span></div>
+        <table class="attach-table">
+          <thead>
+            <tr>
+              <th>视频ID</th>
+              <th>视频作者</th>
+              <th>视频名称</th>
+              <th>累计曝光PV/UV</th>
+              <th>累计点击PV/UV</th>
+              <th style="width:70px;">操作</th>
+            </tr>
+          </thead>
+          <tbody id="attachTbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="drawer-ft">
+      <button class="btn-ghost" onclick="closeAttach()">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 新增挂链抽屉（二级） ═══ -->
+<div class="drawer-mask" id="addDrawerMask" style="z-index:110;">
+  <div class="drawer" style="width:640px;">
+    <div class="drawer-hd">
+      <div class="drawer-title" id="addDrawerTitle">新增挂链博主</div>
+      <span class="drawer-close" onclick="closeAddDrawer()">✕</span>
+    </div>
+    <div class="drawer-body">
+      <div class="form-row">
+        <div class="form-label" id="addPickLabel">选择博主</div>
+        <div class="form-ctrl">
+          <input type="text" id="addSearch" placeholder="输入ID或名称查询" oninput="addSearchInput()">
+          <div class="pick-list" id="addPickList"></div>
+          <button class="btn-save" style="margin-top:8px;" onclick="addPickOne()">添加</button>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">批量上传</div>
+        <div class="form-ctrl">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <button class="btn-primary" onclick="document.getElementById('addTplInput').click()">
+              <svg viewBox="0 0 24 24"><path d="M12 16V4M6 10l6-6 6 6"/><path d="M4 20h16"/></svg>上传
+            </button>
+            <span class="op-link" style="font-size:12.5px;" onclick="addDownloadTpl()">下载模板</span>
+          </div>
+          <input type="file" id="addTplInput" accept=".csv" style="display:none;" onchange="addTplPicked(this)">
+        </div>
+      </div>
+      <div class="attach-sec">本次新增<span class="attach-count" id="addListCount"></span></div>
+      <table class="attach-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>名称</th>
+            <th style="width:70px;">操作</th>
+          </tr>
+        </thead>
+        <tbody id="addListTbody"></tbody>
+      </table>
+    </div>
+    <div class="drawer-ft">
+      <button class="btn-ghost" onclick="closeAddDrawer()">取消</button>
+      <button class="btn-save" id="addDrawerOk" onclick="commitAddDrawer()">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 外链商品 新增/编辑抽屉 ═══ -->
+<div class="drawer-mask" id="gDrawerMask" style="z-index:110;">
+  <div class="drawer" style="width:640px;">
+    <div class="drawer-hd">
+      <div class="drawer-title" id="gDrawerTitle">新增商品</div>
+      <span class="drawer-close" onclick="gCloseForm()">✕</span>
+    </div>
+    <div class="drawer-body">
+      <div class="form-row" id="grow-name">
+        <div class="form-label"><span class="req">*</span>商品名称</div>
+        <div class="form-ctrl">
+          <input type="text" id="g-name" placeholder="请输入商品名称，最长20字" maxlength="20">
+          <div class="err-tip">请输入商品名称</div>
+        </div>
+      </div>
+      <div class="form-row" id="grow-entry">
+        <div class="form-label"><span class="req">*</span>入口图<span class="help-tip" data-tip="此处配置的图片在视频页面作为入口展示">?</span></div>
+        <div class="form-ctrl">
+          <input type="file" id="gEntryInput" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="gPickFiles(this,gEntryArr,'entry')">
+          <div class="upload-grid" id="entryImgGrid"></div>
+          <div class="field-tip">图片尺寸：750*750，支持jpg/jpeg/png/gif，单图最大200M，请上传1张</div>
+          <div class="err-tip">请上传入口图</div>
+        </div>
+      </div>
+      <div class="form-row" id="grow-rec">
+        <div class="form-label"><span class="req">*</span>商品小图<span class="help-tip" data-tip="此处配置的图片在用户浏览历史中展示">?</span></div>
+        <div class="form-ctrl">
+          <input type="file" id="gRecInput" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="gPickFiles(this,gRecArr,'rec')">
+          <div class="upload-grid" id="recImgGrid"></div>
+          <div class="field-tip">图片尺寸：200*200，支持jpg/jpeg/png/gif，单图最大200M，请上传1张</div>
+          <div class="err-tip">请上传商品小图</div>
+        </div>
+      </div>
+      <div class="form-row" id="grow-link">
+        <div class="form-label"><span class="req">*</span>外链</div>
+        <div class="form-ctrl">
+          <input type="text" id="g-link" placeholder="请输入商品跳转链接，以https://开头" maxlength="200">
+          <div class="err-tip">请输入正确的外链地址</div>
+        </div>
+      </div>
+      <div class="form-row" id="grow-type">
+        <div class="form-label"><span class="req">*</span>商品类型</div>
+        <div class="form-ctrl">
+          <select id="g-type">
+            <option value="">请选择</option>
+            <option value="0元leads">0元leads</option>
+            <option value="付费leads">付费leads</option>
+            <option value="付费商品">付费商品</option>
+          </select>
+          <div class="err-tip">请选择商品类型</div>
+        </div>
+      </div>
+      <div class="form-row" id="grow-valid">
+        <div class="form-label"><span class="req">*</span>有效期</div>
+        <div class="form-ctrl">
+          <div class="date-range">
+            <input type="datetime-local" id="g-start">
+            <span class="date-sep">至</span>
+            <input type="datetime-local" id="g-end">
+          </div>
+          <div class="err-tip">请选择有效期</div>
+        </div>
+      </div>
+      <div class="form-row" id="grow-remark">
+        <div class="form-label">备注</div>
+        <div class="form-ctrl">
+          <textarea id="g-remark" placeholder="请输入备注" maxlength="200" rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-ft">
+      <button class="btn-ghost" onclick="gCloseForm()">取消</button>
+      <button class="btn-save" onclick="gSave()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 微课banner 新增/编辑抽屉 ═══ -->
+<div class="drawer-mask" id="bDrawerMask" style="z-index:110;">
+  <div class="drawer" style="width:640px;">
+    <div class="drawer-hd">
+      <div class="drawer-title" id="bDrawerTitle">新增banner</div>
+      <span class="drawer-close" onclick="bCloseForm()">✕</span>
+    </div>
+    <div class="drawer-body">
+      <div class="form-row" id="brow-name">
+        <div class="form-label"><span class="req">*</span>Banner名称</div>
+        <div class="form-ctrl">
+          <input type="text" id="b-name" placeholder="请输入banner名称" maxlength="20">
+          <div class="err-tip">请输入banner名称</div>
+        </div>
+      </div>
+      <div class="form-row" id="brow-img">
+        <div class="form-label"><span class="req">*</span>图片</div>
+        <div class="form-ctrl">
+          <input type="file" id="bImgInput" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="bPickFiles(this)">
+          <div class="upload-grid" id="bImgGrid"></div>
+          <div class="field-tip">图片尺寸：750*360，支持jpg/jpeg/png/gif，单图最大200M，请上传1张</div>
+          <div class="err-tip">请上传图片</div>
+        </div>
+      </div>
+      <div class="form-row" id="brow-jtype">
+        <div class="form-label"><span class="req">*</span>跳转类型</div>
+        <div class="form-ctrl">
+          <select id="b-jtype" onchange="bJumpType(this.value)">
+            <option value="">请选择</option>
+            <option value="video">视频</option>
+            <option value="col">合集</option>
+            <option value="link">外链</option>
+          </select>
+          <div class="err-tip">请选择跳转类型</div>
+        </div>
+      </div>
+      <div class="form-row" id="brow-video" style="display:none;">
+        <div class="form-label"><span class="req">*</span>视频ID</div>
+        <div class="form-ctrl">
+          <input type="text" id="b-video" placeholder="输入视频ID或视频名称查询" oninput="bPickSearch('video')">
+          <div class="pick-list" id="bVideoPick"></div>
+          <div class="err-tip">请选择视频</div>
+        </div>
+      </div>
+      <div class="form-row" id="brow-col" style="display:none;">
+        <div class="form-label"><span class="req">*</span>合集ID</div>
+        <div class="form-ctrl">
+          <input type="text" id="b-col" placeholder="输入合集ID或合集名称查询" oninput="bPickSearch('col')">
+          <div class="pick-list" id="bColPick"></div>
+          <div class="err-tip">请选择合集</div>
+        </div>
+      </div>
+      <div class="form-row" id="brow-posvideo" style="display:none;">
+        <div class="form-label">定位视频ID</div>
+        <div class="form-ctrl">
+          <input type="text" id="b-posvideo" placeholder="输入视频ID或视频名称查询" oninput="bPickSearch('pos')">
+          <div class="pick-list" id="bPosPick"></div>
+        </div>
+      </div>
+      <div class="form-row" id="brow-link" style="display:none;">
+        <div class="form-label"><span class="req">*</span>跳转链接</div>
+        <div class="form-ctrl">
+          <input type="text" id="b-link" placeholder="请输入跳转链接，以https://开头" maxlength="200">
+          <div class="err-tip">请输入以https://开头的跳转链接</div>
+        </div>
+      </div>
+      <div class="form-row" id="brow-ab">
+        <div class="form-label">AB组</div>
+        <div class="form-ctrl">
+          <div class="ms-box" id="bAbBox" onclick="bToggleAbPanel(event)">
+            <span class="ms-text" id="bAbText">请选择</span>
+            <span class="ms-arrow">▼</span>
+            <div class="ms-panel" id="bAbPanel">
+              <label class="ms-item"><input type="checkbox" value="0" onchange="bAbChange(this)">0组</label>
+              <label class="ms-item"><input type="checkbox" value="1" onchange="bAbChange(this)">1组</label>
+              <label class="ms-item"><input type="checkbox" value="2" onchange="bAbChange(this)">2组</label>
+              <label class="ms-item"><input type="checkbox" value="3" onchange="bAbChange(this)">3组</label>
+              <label class="ms-item"><input type="checkbox" value="4" onchange="bAbChange(this)">4组</label>
+              <label class="ms-item"><input type="checkbox" value="5" onchange="bAbChange(this)">5组</label>
+              <label class="ms-item"><input type="checkbox" value="6" onchange="bAbChange(this)">6组</label>
+              <label class="ms-item"><input type="checkbox" value="7" onchange="bAbChange(this)">7组</label>
+              <label class="ms-item"><input type="checkbox" value="8" onchange="bAbChange(this)">8组</label>
+              <label class="ms-item"><input type="checkbox" value="9" onchange="bAbChange(this)">9组</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row" id="brow-valid">
+        <div class="form-label"><span class="req">*</span>有效期</div>
+        <div class="form-ctrl">
+          <div class="date-range">
+            <input type="datetime-local" id="b-start">
+            <span class="date-sep">至</span>
+            <input type="datetime-local" id="b-end">
+          </div>
+          <div class="err-tip">请选择有效期</div>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-ft">
+      <button class="btn-ghost" onclick="bCloseForm()">取消</button>
+      <button class="btn-save" onclick="bSave()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 取消挂链确认弹窗 ═══ -->
+<div class="modal-mask" id="confirmMask" style="z-index:120;">
+  <div class="modal modal-sm">
+    <div class="modal-hd">
+      <div class="modal-title">提示</div>
+      <span class="modal-close" onclick="closeConfirm()">✕</span>
+    </div>
+    <div class="modal-bd"><div class="confirm-text" id="confirmText">确定要取消挂链吗？</div></div>
+    <div class="modal-ft">
+      <button class="btn-ghost" onclick="closeConfirm()">取消</button>
+      <button class="btn-save" onclick="doConfirm()">确定</button>
     </div>
   </div>
 </div>
@@ -547,173 +909,723 @@ function toggleGroup(id){
   document.getElementById(id).classList.toggle('open');
 }
 
-/* ── 页面切换：会员商品 / 实物商品 / 实物商品表单页 / 订单列表 ── */
+/* ── 页面切换：会员商品 / 外链商品 / 微课banner运营 ── */
 let currentPage = 'member';
 function switchPage(page){
   currentPage = page;
-  ['member', 'goods', 'goods-form', 'orders'].forEach(p => document.getElementById('page-' + p).classList.toggle('active', p === page));
+  ['member', 'goods', 'banner'].forEach(p => document.getElementById('page-' + p).classList.toggle('active', p === page));
   document.getElementById('navMember').classList.toggle('active', page === 'member');
-  document.getElementById('navGoods').classList.toggle('active', page === 'goods' || page === 'goods-form');
-  document.getElementById('navOrders').classList.toggle('active', page === 'orders');
-  document.getElementById('navProduct').classList.toggle('active', page !== 'orders');
-  document.getElementById('navFinance').classList.toggle('active', page === 'orders');
+  document.getElementById('navGoods').classList.toggle('active', page === 'goods');
+  document.getElementById('navBanner').classList.toggle('active', page === 'banner');
+  document.getElementById('navProduct').classList.toggle('active', page !== 'banner');
+  document.getElementById('navOps').classList.toggle('active', page === 'banner');
   updateBreadcrumb();
 }
 function updateBreadcrumb(){
   let html;
-  if(currentPage === 'orders'){
-    html = '<a href="javascript:;">财务管理</a><span class="sep">/</span><span class="cur">订单列表</span>';
+  if(currentPage === 'banner'){
+    html = '<a href="javascript:;">产品运营</a><span class="sep">/</span><span class="cur">微课banner运营</span>';
+  }else if(currentPage === 'goods'){
+    html = '<a href="javascript:;">商品管理</a><span class="sep">/</span><span class="cur">外链商品</span>';
+  }else if(currentPage === 'member'){
+    html = '<a href="javascript:;">商品管理</a><span class="sep">/</span><span class="cur">会员商品</span>';
   }else{
-    html = '<a href="javascript:;">商品管理</a>';
-    if(currentPage === 'member'){
-      html += '<span class="sep">/</span><span class="cur">会员商品</span>';
-    }else if(currentPage === 'goods'){
-      html += '<span class="sep">/</span><span class="cur">实物商品</span>';
-    }else{
-      html += '<span class="sep">/</span><a href="javascript:;" onclick="switchPage(\'goods\')">实物商品</a>'
-            + '<span class="sep">/</span><span class="cur">' + (gEditIndex >= 0 ? '编辑商品' : '新增商品') + '</span>';
-    }
+    html = '<a href="javascript:;">商品管理</a><span class="sep">/</span><span class="cur">外链商品</span>';
   }
   document.getElementById('breadcrumb').innerHTML = html;
 }
 
-/* ── 实物商品数据 ── */
+/* ── 外链商品数据 ── */
 let goods = [
-  {id:1, name:'知识手账本', etitle:'学霸养成知识手账', btn:'立即抢购', price:39, oprice:59, headImg:true, sales:1200, imgs:3, source:'网校'},
-  {id:2, name:'错题打印机', etitle:'口袋错题打印机', btn:'立即购买', price:299, oprice:399, headImg:true, sales:356, imgs:2, source:'自选'},
-  {id:3, name:'单词卡片机', etitle:'天天学单词卡', btn:'马上抢', price:129, oprice:169, headImg:true, sales:89, imgs:4, source:'自选'},
+  {id:1, name:'0元领学习规划', entryFiles:[{}], recFiles:[{}], link:'https://m.tiantianxue.com/act/free-plan', type:'0元leads', start:'2026-10-01T10:00', end:'2026-12-31T23:59', expPv:128560, expUv:45210, clkPv:9870, clkUv:6120, authAttach:[5001,5002], attach:[9001,9002], colAttach:[7001,7003]},
+  {id:2, name:'AI错题诊断服务', entryFiles:[{}], recFiles:[{}], link:'https://m.tiantianxue.com/act/ai-check', type:'付费leads', start:'2026-11-15T10:00', end:'2027-02-28T23:59', expPv:0, expUv:0, clkPv:0, clkUv:0, authAttach:[5003], attach:[9003], colAttach:[7002]},
+  {id:3, name:'智能单词机Pro', entryFiles:[{}], recFiles:[{}], link:'https://shop.tiantianxue.com/goods/word-pro', type:'付费商品', start:'2026-08-01T10:00', end:'2026-10-20T23:59', expPv:86420, expUv:30980, clkPv:5230, clkUv:3480, authAttach:[], attach:[], colAttach:[]},
 ];
 let gNextId = Math.max(...goods.map(g => g.id)) + 1;
 let gEditIndex = -2;
-let gHead = false, gImgs = 0;
+
+const G_STATUS = {
+  notstarted:{text:'未生效', cls:'tag-wx'},
+  active:    {text:'生效中', cls:'tag-on'},
+  expired:   {text:'已失效', cls:'tag-no'},
+};
+function gStatus(g){
+  const now = new Date();
+  if(new Date(g.start) > now) return 'notstarted';
+  if(new Date(g.end) < now) return 'expired';
+  return 'active';
+}
 
 const IMG_ICON = '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>';
+const statCell = o => `<td class="stat-cell"><span class="lbl">PV</span>${Number(o.pv || 0).toLocaleString()}<br><span class="lbl">UV</span>${Number(o.uv || 0).toLocaleString()}</td>`;
 
 function gRender(){
+  const kwId = document.getElementById('gSearchId').value.trim();
+  const kwName = document.getElementById('gSearchName').value.trim().toLowerCase();
+  const kwLink = document.getElementById('gSearchLink').value.trim().toLowerCase();
+  const ty = document.getElementById('gSearchType').value;
+  const st = document.getElementById('gSearchStatus').value;
+  const list = goods.filter(g =>
+    (!kwId || String(g.id).includes(kwId)) &&
+    (!kwName || g.name.toLowerCase().includes(kwName)) &&
+    (!kwLink || (g.link || '').toLowerCase().includes(kwLink)) &&
+    (!ty || g.type === ty) &&
+    (!st || gStatus(g) === st)
+  );
   const tbody = document.getElementById('gTbody');
-  tbody.innerHTML = goods.map(g => {
-    let thumbs = '';
-    for(let i = 0; i < Math.min(g.imgs, 3); i++) thumbs += `<span class="thumb thumb-sm">${IMG_ICON}</span>`;
-    return `
-    <tr>
-      <td class="id-cell">${g.id}</td>
-      <td class="name-cell">${esc(g.name)}</td>
-      <td>${esc(g.etitle)}</td>
-      <td>${esc(g.btn)}</td>
-      <td class="price"><span class="yen">¥</span>${fmt(g.price)}</td>
-      <td class="price-old">${g.oprice === '' || g.oprice == null ? '—' : '<span class="yen">¥</span>' + fmt(g.oprice)}</td>
-      <td>${g.headImg ? `<span class="thumb">${IMG_ICON}</span>` : '<span class="no-img">—</span>'}</td>
-      <td>${Number(g.sales).toLocaleString()}</td>
-      <td><div class="thumb-row">${thumbs}${g.imgs > 0 ? `<span class="thumb-count">共${g.imgs}张</span>` : '<span class="no-img">—</span>'}</div></td>
-      <td><span class="tag ${g.source === '自选' ? 'tag-zi' : 'tag-wx'}">${g.source}</span></td>
-      <td><span class="op-link" onclick="gOpenForm(${goods.indexOf(g)})">编辑</span></td>
-    </tr>`;
-  }).join('');
-  document.getElementById('gPagerInfo').textContent = `共 ${goods.length} 条`;
+  if(!list.length){
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="11">暂无数据</td></tr>';
+  }else{
+    tbody.innerHTML = list.map(g => {
+      const imgCell = files => {
+        const f = files && files[0];
+        return !f ? '<span class="no-img">—</span>'
+          : f.url ? `<span class="thumb"><img class="thumb-img" src="${f.url}"></span>`
+          : `<span class="thumb">${IMG_ICON}</span>`;
+      };
+      const gs = G_STATUS[gStatus(g)];
+      return `
+      <tr>
+        <td class="id-cell">${g.id}</td>
+        <td class="name-cell">${esc(g.name)}</td>
+        <td>${imgCell(g.entryFiles)}</td>
+        <td>${imgCell(g.recFiles)}</td>
+        <td class="ext-desc" title="${esc(g.link || '')}">${esc(g.link || '—')}</td>
+        ${statCell({pv:g.expPv, uv:g.expUv})}
+        ${statCell({pv:g.clkPv, uv:g.clkUv})}
+        <td>${esc(g.type)}</td>
+        <td>${(g.start || '').replace('T', ' ')}<br>至 ${(g.end || '').replace('T', ' ')}</td>
+        <td><span class="tag ${gs.cls}">${gs.text}</span></td>
+        <td class="op-cell"><span class="op-link" onclick="gOpenForm(${goods.indexOf(g)})">编辑</span><span class="op-link" onclick="gOpenAttach(${goods.indexOf(g)})">挂链</span></td>
+      </tr>`;
+    }).join('');
+  }
+  document.getElementById('gPagerInfo').textContent = `共 ${list.length} 条`;
 }
 
-/* ── 订单数据 ── */
-const ORDER_STATUS = {
-  paid:    {text:'支付成功', cls:'tag-on'},
-  pending: {text:'待支付',   cls:'tag-wx'},
-  refund:  {text:'已退款',   cls:'tag-no'},
-};
-let orders = [
-  {id:'20261020112635001', uid:'1002381', type:'会员商品', amount:19.9, time:'2026-10-20 11:26', status:'paid'},
-  {id:'20261020105210002', uid:'1004217', type:'实物商品', amount:299,  time:'2026-10-20 10:52', status:'paid'},
-  {id:'20261020093847003', uid:'1003856', type:'会员商品', amount:168,  time:'2026-10-20 09:38', status:'pending'},
-  {id:'20261019181222004', uid:'1001290', type:'实物商品', amount:39,   time:'2026-10-19 18:12', status:'refund'},
-  {id:'20261019154708005', uid:'1005842', type:'会员商品', amount:25,   time:'2026-10-19 15:47', status:'paid'},
-  {id:'20261018113256006', uid:'1006733', type:'实物商品', amount:129,  time:'2026-10-18 11:32', status:'paid'},
+function gResetSearch(){
+  document.getElementById('gSearchId').value = '';
+  document.getElementById('gSearchName').value = '';
+  document.getElementById('gSearchLink').value = '';
+  document.getElementById('gSearchType').value = '';
+  document.getElementById('gSearchStatus').value = '';
+  gRender();
+}
+
+/* ── 微课banner运营 ── */
+let banners = [
+  {id:1, name:'开学季·1元微课专场', img:[{}], jtype:'link', link:'https://m.tiantianxue.com/act/open-season', ab:[0,1], start:'2026-10-01T10:00', end:'2026-12-31T23:59', expPv:186540, expUv:64210, clkPv:12480, clkUv:8360},
+  {id:2, name:'期中冲刺·名师微课包', img:[{}], jtype:'video', videoId:9001, ab:[], start:'2026-11-15T10:00', end:'2027-01-10T23:59', expPv:98320, expUv:35740, clkPv:7620, clkUv:5180},
+  {id:3, name:'寒假预习营报名入口', img:[{}], jtype:'col', colId:7001, posVideoId:9003, ab:[2,3], start:'2026-08-01T10:00', end:'2026-10-20T23:59', expPv:143870, expUv:50920, clkPv:9340, clkUv:6210},
 ];
-function oRender(){
-  document.getElementById('oTbody').innerHTML = orders.map(o => {
-    const st = ORDER_STATUS[o.status];
+let bNextId = Math.max(...banners.map(b => b.id)) + 1;
+let bEditIndex = -2;   // -1 新增，>=0 编辑
+let bImgArr = [];      // 表单图片
+let bJump = '';        // 跳转类型：video / col / link
+let bAbSel = new Set();
+const B_JUMP = {video:'视频', col:'合集', link:'外链'};
+
+function bRender(){
+  const kwId = document.getElementById('bSearchId').value.trim();
+  const kwName = document.getElementById('bSearchName').value.trim().toLowerCase();
+  const st = document.getElementById('bSearchStatus').value;
+  const list = banners.filter(b =>
+    (!kwId || String(b.id).includes(kwId)) &&
+    (!kwName || b.name.toLowerCase().includes(kwName)) &&
+    (!st || gStatus(b) === st)
+  );
+  const imgCell = files => {
+    const f = files && files[0];
+    return !f ? '<span class="no-img">—</span>'
+      : f.url ? `<span class="thumb"><img class="thumb-img" src="${f.url}"></span>`
+      : `<span class="thumb">${IMG_ICON}</span>`;
+  };
+  const targetCell = b => {
+    if(b.jtype === 'video'){
+      const v = VIDEOS.find(x => x.id === b.videoId);
+      return b.videoId + (v ? ':' + esc(v.name) : '');
+    }
+    if(b.jtype === 'col'){
+      const c = COLLECTIONS.find(x => x.id === b.colId);
+      const p = b.posVideoId ? VIDEOS.find(x => x.id === b.posVideoId) : null;
+      return b.colId + (c ? ':' + esc(c.name) : '') + (b.posVideoId ? '<br>定位视频 ' + b.posVideoId + (p ? ':' + esc(p.name) : '') : '');
+    }
+    return '<span class="ext-desc" title="' + esc(b.link || '') + '">' + esc(b.link || '—') + '</span>';
+  };
+  document.getElementById('bTbody').innerHTML = list.length ? list.map(b => {
+    const bs = G_STATUS[gStatus(b)];
     return `
-    <tr>
-      <td class="id-cell">${o.id}</td>
-      <td class="id-cell">${o.uid}</td>
-      <td>${esc(o.type)}</td>
-      <td class="price"><span class="yen">¥</span>${fmt(o.amount)}</td>
-      <td>${o.time}</td>
-      <td><span class="tag ${st.cls}">${st.text}</span></td>
+    <tr ondragstart="bDragStart(event,${b.id})" ondragover="bDragOver(event,this)" ondragleave="bDragLeave(this)" ondrop="bDrop(event,${b.id})" ondragend="bDragEnd(this)">
+      <td><span class="drag-handle" onmousedown="this.closest('tr').draggable=true" title="拖拽排序">⠿</span></td>
+      <td class="id-cell">${b.id}</td>
+      <td class="id-cell">${banners.indexOf(b) + 1}</td>
+      <td class="name-cell">${esc(b.name)}</td>
+      <td>${imgCell(b.img)}</td>
+      ${statCell({pv:b.expPv, uv:b.expUv})}
+      ${statCell({pv:b.clkPv, uv:b.clkUv})}
+      <td>${B_JUMP[b.jtype] || '—'}</td>
+      <td>${targetCell(b)}</td>
+      <td>${b.ab && b.ab.length ? b.ab.map(g => g + '组').join('、') : '—'}</td>
+      <td>${(b.start || '').replace('T', ' ')}<br>至 ${(b.end || '').replace('T', ' ')}</td>
+      <td><span class="tag ${bs.cls}">${bs.text}</span></td>
+      <td class="op-cell"><span class="op-link" onclick="bOpenForm(${banners.indexOf(b)})">编辑</span></td>
     </tr>`;
-  }).join('');
-  document.getElementById('oPagerInfo').textContent = `共 ${orders.length} 条`;
+  }).join('') : '<tr class="empty-row"><td colspan="13">暂无banner</td></tr>';
+  document.getElementById('bPagerInfo').textContent = `共 ${list.length} 条`;
+}
+function bResetSearch(){
+  document.getElementById('bSearchId').value = '';
+  document.getElementById('bSearchName').value = '';
+  document.getElementById('bSearchStatus').value = '';
+  bRender();
 }
 
-function renderUploads(){
-  const box = document.getElementById('headImgBox');
-  box.classList.toggle('has', gHead);
-  box.innerHTML = gHead
-    ? `${IMG_ICON}<span>已上传</span><span class="u-del" onclick="event.stopPropagation();gHead=false;renderUploads();document.getElementById('grow-head').classList.remove('error')">✕</span>`
-    : `${IMG_ICON}<span>上传图片</span>`;
+/* ── 拖拽排序 ── */
+let bDragId = 0;
+function bDragStart(e, id){
+  bDragId = id;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', id);
+}
+function bDragOver(e, row){
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  row.classList.add('drag-over');
+}
+function bDragLeave(row){
+  row.classList.remove('drag-over');
+}
+function bDrop(e, targetId){
+  e.preventDefault();
+  bDragLeave(e.target.closest('tr'));
+  if(!bDragId || bDragId === targetId) return;
+  const from = banners.findIndex(b => b.id === bDragId);
+  const to = banners.findIndex(b => b.id === targetId);
+  const [moved] = banners.splice(from, 1);
+  banners.splice(to, 0, moved);
+  bRender();
+  document.getElementById('bSaveSortBtn').style.display = '';
+}
+function bDragEnd(row){
+  row.draggable = false;
+  row.classList.remove('drag-over');
+  bDragId = 0;
+}
+function bSaveSort(){
+  banners.forEach((b, i) => b.sort = i + 1);
+  document.getElementById('bSaveSortBtn').style.display = 'none';
+  toast('排序已保存');
+}
 
-  let html = '';
-  for(let i = 0; i < gImgs; i++){
-    html += `<div class="upload-tile">${IMG_ICON}<span class="u-del" onclick="event.stopPropagation();gImgs--;renderUploads();document.getElementById('grow-imgs').classList.remove('error')">✕</span></div>`;
+/* ── 新增/编辑抽屉 ── */
+function bOpenForm(idx){
+  bEditIndex = idx;
+  document.getElementById('bDrawerTitle').textContent = idx >= 0 ? '编辑banner' : '新增banner';
+  const b = idx >= 0 ? banners[idx] : {};
+  document.getElementById('b-name').value = b.name || '';
+  document.getElementById('b-video').value = b.videoId || '';
+  document.getElementById('b-col').value = b.colId || '';
+  document.getElementById('b-posvideo').value = b.posVideoId || '';
+  document.getElementById('b-link').value = b.link || '';
+  document.getElementById('b-start').value = b.start || '';
+  document.getElementById('b-end').value = b.end || '';
+  bImgArr = (b.img && b.img.length) ? b.img.map(f => ({...f})) : [];
+  bAbSel = new Set(b.ab || []);
+  document.querySelectorAll('#bAbPanel input[type=checkbox]').forEach(cb => cb.checked = bAbSel.has(+cb.value));
+  renderBAbText();
+  ['bVideoPick', 'bColPick', 'bPosPick'].forEach(id => { const el = document.getElementById(id); el.classList.remove('show'); el.innerHTML = ''; });
+  document.querySelectorAll('#bDrawerMask .form-row').forEach(r => r.classList.remove('error'));
+  bJumpType(b.jtype || '', true);
+  renderBImgGrid();
+  document.getElementById('bDrawerMask').classList.add('show');
+  document.querySelector('#bDrawerMask .drawer').classList.add('show');
+}
+function bCloseForm(){
+  document.getElementById('bDrawerMask').classList.remove('show');
+  document.querySelector('#bDrawerMask .drawer').classList.remove('show');
+  bEditIndex = -2;
+}
+document.getElementById('bDrawerMask').addEventListener('click', e => {
+  if(e.target === e.currentTarget) bCloseForm();
+});
+
+/* 跳转类型切换 + 级联字段显隐 */
+function bJumpType(t, silent){
+  bJump = t;
+  document.getElementById('b-jtype').value = t;
+  document.getElementById('brow-video').style.display = t === 'video' ? '' : 'none';
+  document.getElementById('brow-col').style.display = t === 'col' ? '' : 'none';
+  document.getElementById('brow-posvideo').style.display = t === 'col' ? '' : 'none';
+  document.getElementById('brow-link').style.display = t === 'link' ? '' : 'none';
+  if(!silent) document.getElementById('brow-jtype').classList.remove('error');
+}
+
+/* 视频ID / 合集ID / 定位视频ID 搜索选择 */
+const B_PICK = {
+  video: {src:() => VIDEOS,      input:'b-video', list:'bVideoPick', row:'brow-video'},
+  col:   {src:() => COLLECTIONS, input:'b-col',   list:'bColPick',   row:'brow-col'},
+  pos:   {src:() => VIDEOS,      input:'b-posvideo', list:'bPosPick', row:'brow-posvideo'},
+};
+function bPickSearch(kind){
+  const conf = B_PICK[kind];
+  const q = document.getElementById(conf.input).value.trim();
+  const list = document.getElementById(conf.list);
+  if(!q){ list.classList.remove('show'); list.innerHTML = ''; return; }
+  const items = /^\d+$/.test(q)
+    ? [conf.src().find(x => x.id === +q)].filter(Boolean)
+    : conf.src().filter(x => x.name.toLowerCase().includes(q.toLowerCase())).slice(0, 8);
+  list.classList.add('show');
+  list.innerHTML = items.length
+    ? items.map(x => `<div class="pick-item" onclick="bPickSet('${kind}',${x.id})"><span class="pid">${x.id}</span><span>${esc(x.name)}</span></div>`).join('')
+    : '<div class="pick-empty">未找到匹配内容</div>';
+}
+function bPickSet(kind, id){
+  const conf = B_PICK[kind];
+  document.getElementById(conf.input).value = id;
+  const list = document.getElementById(conf.list);
+  list.classList.remove('show');
+  list.innerHTML = '';
+  document.getElementById(conf.row).classList.remove('error');
+}
+
+/* 图片上传（单张，必填） */
+function bPickFiles(input){
+  const files = [...input.files];
+  input.value = '';
+  for(const f of files){
+    if(!['image/jpeg','image/png','image/gif'].includes(f.type)){ toast('仅支持jpg、jpeg、png、gif格式'); continue; }
+    if(f.size > 200 * 1024 * 1024){ toast('单张图片不能超过200M'); continue; }
+    bImgArr.length = 0;
+    bImgArr.push({url: URL.createObjectURL(f), name: f.name});
   }
-  if(gImgs < 9){
-    html += '<div class="upload-tile upload-add" onclick="gImgs++;renderUploads();document.getElementById(\'grow-imgs\').classList.remove(\'error\')"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>添加</span></div>';
+  document.getElementById('brow-img').classList.remove('error');
+  renderBImgGrid();
+}
+function bRemoveImg(){
+  bImgArr.length = 0;
+  renderBImgGrid();
+}
+function renderBImgGrid(){
+  const f = bImgArr[0];
+  document.getElementById('bImgGrid').innerHTML = f
+    ? `<div class="upload-tile tile-img" style="background-image:url('${f.url}')"><span class="u-del" onclick="event.stopPropagation();bRemoveImg()">✕</span></div>`
+    : `<div class="upload-tile upload-add" onclick="document.getElementById('bImgInput').click()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>上传</span></div>`;
+}
+
+/* AB组多选（下拉面板） */
+function bToggleAbPanel(e){
+  if(e.target.closest('#bAbPanel')) return;
+  document.getElementById('bAbPanel').classList.toggle('show');
+}
+function bAbChange(cb){
+  cb.checked ? bAbSel.add(+cb.value) : bAbSel.delete(+cb.value);
+  renderBAbText();
+}
+function renderBAbText(){
+  document.getElementById('bAbText').textContent = bAbSel.size
+    ? [...bAbSel].sort((a, b) => a - b).map(g => g + '组').join('、')
+    : '请选择';
+}
+document.addEventListener('click', e => {
+  if(!e.target.closest('#bAbBox')) document.getElementById('bAbPanel').classList.remove('show');
+});
+
+/* 校验 + 保存 */
+function bSave(){
+  const name = document.getElementById('b-name').value.trim();
+  const link = document.getElementById('b-link').value.trim();
+  const start = document.getElementById('b-start').value;
+  const end = document.getElementById('b-end').value;
+  const vid = document.getElementById('b-video').value.trim();
+  const cid = document.getElementById('b-col').value.trim();
+  const pid = document.getElementById('b-posvideo').value.trim();
+  let ok = true;
+  const mark = (id, bad) => { document.getElementById(id).classList.toggle('error', bad); if(bad) ok = false; };
+  mark('brow-name', !name);
+  mark('brow-img', !bImgArr.length);
+  mark('brow-jtype', !bJump);
+  if(bJump === 'video') mark('brow-video', !(vid && videoOf(vid)));
+  if(bJump === 'col'){
+    mark('brow-col', !(cid && colOf(cid)));
+    if(pid) mark('brow-posvideo', !videoOf(pid));
   }
-  document.getElementById('detailImgGrid').innerHTML = html;
+  if(bJump === 'link') mark('brow-link', !(link && link.startsWith('https://')));
+  mark('brow-valid', !(start && end));
+  if(!ok) return;
+  const data = {
+    name, jtype: bJump, start, end,
+    img: bImgArr.map(f => ({...f})),
+    ab: [...bAbSel].sort((a, b) => a - b),
+    videoId: bJump === 'video' ? +vid : undefined,
+    colId: bJump === 'col' ? +cid : undefined,
+    posVideoId: (bJump === 'col' && pid) ? +pid : undefined,
+    link: bJump === 'link' ? link : undefined,
+  };
+  if(bEditIndex >= 0){
+    Object.assign(banners[bEditIndex], data);
+    toast('保存成功');
+  }else{
+    banners.unshift({id:bNextId++, ...data});
+    toast('新增成功');
+  }
+  bCloseForm();
+  bRender();
+}
+
+/* ── 图片上传 ── */
+let gEntryArr = [], gRecArr = []; // {url, name}，url 为空 = 示例占位
+const G_ROW = {entry:'grow-entry', rec:'grow-rec'};
+function gPickFiles(input, arr, kind){
+  const files = [...input.files];
+  input.value = '';
+  for(const f of files){
+    if(!['image/jpeg','image/png','image/gif'].includes(f.type)){ toast('仅支持jpg、jpeg、png、gif格式'); continue; }
+    if(f.size > 200 * 1024 * 1024){ toast('单张图片不能超过200M'); continue; }
+    arr.length = 0;
+    arr.push({url: URL.createObjectURL(f), name: f.name});
+  }
+  document.getElementById(G_ROW[kind]).classList.remove('error');
+  renderUploads();
+}
+function gRemoveImg(kind){
+  ({entry:gEntryArr, rec:gRecArr})[kind].length = 0;
+  renderUploads();
+}
+function renderUploads(){
+  const tile = (f, kind) => `<div class="upload-tile${f.url ? ' tile-img' : ''}"${f.url ? ` style="background-image:url('${f.url}')"` : ''}>${f.url ? '' : IMG_ICON}<span class="u-del" onclick="event.stopPropagation();gRemoveImg('${kind}')">✕</span></div>`;
+  const addTile = kind => `<div class="upload-tile upload-add" onclick="document.getElementById('g${kind === 'entry' ? 'Entry' : 'Rec'}Input').click()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>上传</span></div>`;
+  const render = (arr, kind, gridId) => {
+    document.getElementById(gridId).innerHTML = arr.length ? tile(arr[0], kind) : addTile(kind);
+  };
+  render(gEntryArr, 'entry', 'entryImgGrid');
+  render(gRecArr, 'rec', 'recImgGrid');
 }
 
 function gOpenForm(idx){
   gEditIndex = idx;
-  const g = idx >= 0 ? goods[idx] : {name:'', etitle:'', btn:'', price:'', oprice:'', headImg:false, sales:'', imgs:0, source:''};
+  document.getElementById('gDrawerTitle').textContent = idx >= 0 ? '编辑商品' : '新增商品';
+  const g = idx >= 0 ? goods[idx] : {name:'', entryFiles:[], recFiles:[], link:'', type:'', start:'', end:''};
+  gEntryArr = idx >= 0 && goods[idx].entryFiles ? goods[idx].entryFiles.map(f => ({...f})) : [];
+  gRecArr = idx >= 0 && goods[idx].recFiles ? goods[idx].recFiles.map(f => ({...f})) : [];
   document.getElementById('g-name').value = g.name;
-  document.getElementById('g-etitle').value = g.etitle;
-  document.getElementById('g-btn').value = g.btn;
-  document.getElementById('g-price').value = g.price;
-  document.getElementById('g-oprice').value = g.oprice;
-  document.getElementById('g-sales').value = g.sales;
-  document.getElementById('g-source').value = g.source;
-  gHead = !!g.headImg;
-  gImgs = g.imgs || 0;
-  document.querySelectorAll('#page-goods-form .form-row').forEach(r => r.classList.remove('error'));
+  document.getElementById('g-remark').value = g.remark || '';
+  document.getElementById('g-link').value = g.link;
+  document.getElementById('g-type').value = g.type;
+  document.getElementById('g-start').value = g.start;
+  document.getElementById('g-end').value = g.end;
+  document.querySelectorAll('#gDrawerMask .form-row').forEach(r => r.classList.remove('error'));
   renderUploads();
-  switchPage('goods-form');
+  document.getElementById('gDrawerMask').classList.add('show');
+  document.querySelector('#gDrawerMask .drawer').classList.add('show');
 }
-
-function gBackToList(){
+function gCloseForm(){
+  document.getElementById('gDrawerMask').classList.remove('show');
+  document.querySelector('#gDrawerMask .drawer').classList.remove('show');
   gEditIndex = -2;
-  switchPage('goods');
 }
+document.getElementById('gDrawerMask').addEventListener('click', e => {
+  if(e.target === e.currentTarget) gCloseForm();
+});
 
 function gSave(){
   const name = document.getElementById('g-name').value.trim();
-  const etitle = document.getElementById('g-etitle').value.trim();
-  const btn = document.getElementById('g-btn').value.trim();
-  const price = document.getElementById('g-price').value;
-  const oprice = document.getElementById('g-oprice').value;
-  const sales = document.getElementById('g-sales').value;
-  const source = document.getElementById('g-source').value;
+  const remark = document.getElementById('g-remark').value.trim();
+  const link = document.getElementById('g-link').value.trim();
+  const type = document.getElementById('g-type').value;
+  const start = document.getElementById('g-start').value;
+  const end = document.getElementById('g-end').value;
 
   let ok = true;
   const mark = (id, bad) => { document.getElementById(id).classList.toggle('error', bad); if(bad) ok = false; };
   mark('grow-name', !name);
-  mark('grow-etitle', !etitle);
-  mark('grow-btn', !btn);
-  mark('grow-price', price === '' || +price < 0);
-  mark('grow-head', !gHead);
-  mark('grow-sales', sales === '' || +sales < 0 || !Number.isInteger(+sales));
-  mark('grow-imgs', gImgs < 1);
-  mark('grow-source', !source);
+  mark('grow-entry', gEntryArr.length < 1);
+  mark('grow-rec', gRecArr.length < 1);
+  mark('grow-link', !/^https?:\/\/\S+/.test(link));
+  mark('grow-type', !type);
+  const validTip = document.querySelector('#grow-valid .err-tip');
+  validTip.textContent = (!start || !end) ? '请选择有效期' : (end < start ? '结束时间不能早于开始时间' : '');
+  mark('grow-valid', !start || !end || end < start);
   if(!ok) return;
 
-  const item = {name, etitle, btn, price:+price, oprice: oprice === '' ? '' : +oprice, headImg:gHead, sales:+sales, imgs:gImgs, source};
+  const item = {name, remark, entryFiles:[...gEntryArr], recFiles:[...gRecArr], link, type, start, end};
   if(gEditIndex >= 0){
-    goods[gEditIndex] = {id: goods[gEditIndex].id, ...item};
+    const old = goods[gEditIndex];
+    goods[gEditIndex] = {id: old.id, authAttach: old.authAttach || [], attach: old.attach || [], colAttach: old.colAttach || [], expPv: old.expPv || 0, expUv: old.expUv || 0, clkPv: old.clkPv || 0, clkUv: old.clkUv || 0, ...item};
     toast('保存成功');
   }else{
-    goods.unshift({id: gNextId++, ...item});
+    goods.unshift({id: gNextId++, authAttach:[], attach:[], colAttach:[], expPv:0, expUv:0, clkPv:0, clkUv:0, ...item});
     toast('新增成功');
   }
   gEditIndex = -2;
   gRender();
-  switchPage('goods');
+  gCloseForm();
 }
+
+/* ── 挂链 ── */
+const VIDEOS = [
+  {id:9001, author:'数学李老师', name:'初中数学·一元二次方程精讲', expPv:52310, expUv:18420, clkPv:3120, clkUv:2080, orders:356},
+  {id:9002, author:'英语王老师', name:'3分钟学会背单词捷径', expPv:98760, expUv:35180, clkPv:7640, clkUv:5130, orders:1205},
+  {id:9003, author:'物理张老师', name:'高中物理·力学必考模型', expPv:24150, expUv:9360, clkPv:1480, clkUv:1010, orders:89},
+  {id:9004, author:'化学刘老师', name:'化学实验满分套路', expPv:41280, expUv:15240, clkPv:2530, clkUv:1690, orders:210},
+  {id:9005, author:'语文赵老师', name:'初中语文·阅读理解抢分课', expPv:18790, expUv:7210, clkPv:980, clkUv:660, orders:67},
+  {id:9006, author:'奥数孙老师', name:'小学奥数·行程问题专题', expPv:33940, expUv:12480, clkPv:2010, clkUv:1380, orders:432},
+  {id:111, author:'测试作者一', name:'测试视频111·函数图像速写', expPv:1200, expUv:800, clkPv:200, clkUv:150, orders:12},
+  {id:222, author:'测试作者二', name:'测试视频222·几何辅助线技巧', expPv:2400, expUv:1600, clkPv:400, clkUv:300, orders:24},
+  {id:333, author:'测试作者三', name:'测试视频333·英语语法填空', expPv:3600, expUv:2400, clkPv:600, clkUv:450, orders:36},
+  {id:444, author:'测试作者四', name:'测试视频444·物理电路分析', expPv:4800, expUv:3200, clkPv:800, clkUv:600, orders:48},
+  {id:555, author:'测试作者五', name:'测试视频555·化学方程配平', expPv:6000, expUv:4000, clkPv:1000, clkUv:750, orders:60},
+];
+const videoOf = id => VIDEOS.find(v => v.id === +id);
+const COLLECTIONS = [
+  {id:7001, name:'初中数学·压轴题满分合集', expPv:45620, expUv:16830, clkPv:3480, clkUv:2320, orders:1024},
+  {id:7002, name:'高中英语·听力专项训练合集', expPv:28310, expUv:10250, clkPv:1960, clkUv:1310, orders:530},
+  {id:7003, name:'小学语文·作文素材合集', expPv:36180, expUv:13720, clkPv:2740, clkUv:1830, orders:866},
+  {id:7004, name:'初中物理·实验题精讲合集', expPv:19870, expUv:7450, clkPv:1120, clkUv:760, orders:291},
+  {id:111, name:'测试合集111·每日一练', expPv:1300, expUv:900, clkPv:230, clkUv:170, orders:13},
+  {id:222, name:'测试合集222·错题本精选', expPv:2600, expUv:1700, clkPv:460, clkUv:340, orders:26},
+  {id:333, name:'测试合集333·考点速记', expPv:3900, expUv:2500, clkPv:690, clkUv:510, orders:39},
+  {id:444, name:'测试合集444·真题模考', expPv:5200, expUv:3300, clkPv:920, clkUv:680, orders:52},
+  {id:555, name:'测试合集555·状元笔记', expPv:6500, expUv:4100, clkPv:1150, clkUv:860, orders:65},
+];
+const colOf = id => COLLECTIONS.find(c => c.id === +id);
+const AUTHORS = [
+  {id:5001, nick:'数学李老师', expPv:156800, expUv:52310, clkPv:9840, clkUv:6720, orders:1820},
+  {id:5002, nick:'英语王老师', expPv:234150, expUv:78940, clkPv:15230, clkUv:10480, orders:3105},
+  {id:5003, nick:'物理张老师', expPv:98260, expUv:34170, clkPv:6210, clkUv:4190, orders:980},
+  {id:5004, nick:'化学刘老师', expPv:120540, expUv:41680, clkPv:8350, clkUv:5640, orders:1360},
+  {id:111, nick:'测试博主一', expPv:1100, expUv:700, clkPv:190, clkUv:140, orders:11},
+  {id:222, nick:'测试博主二', expPv:2200, expUv:1400, clkPv:380, clkUv:280, orders:22},
+  {id:333, nick:'测试博主三', expPv:3300, expUv:2100, clkPv:570, clkUv:420, orders:33},
+  {id:444, nick:'测试博主四', expPv:4400, expUv:2800, clkPv:760, clkUv:560, orders:44},
+  {id:555, nick:'测试博主五', expPv:5500, expUv:3500, clkPv:950, clkUv:700, orders:55},
+];
+const authorOf = id => AUTHORS.find(a => a.id === +id);
+/* 挂链范围配置：key=商品上的字段名，src=可选数据源，label=展示名称 */
+const ATTACH_SCOPE = {
+  author:{key:'authAttach', lookup:authorOf, noun:'博主', src:AUTHORS,     label:x => x.nick},
+  video: {key:'attach',     lookup:videoOf,  noun:'视频', src:VIDEOS,      label:x => x.name},
+  col:   {key:'colAttach',  lookup:colOf,    noun:'合集', src:COLLECTIONS, label:x => x.name},
+};
+let attachIdx = -2;
+let cancelKind = 'video';
+let cancelVid = 0;
+
+function gOpenAttach(idx){
+  attachIdx = idx;
+  const gs = G_STATUS[gStatus(goods[idx])];
+  document.getElementById('attachProd').textContent = '当前商品：' + goods[idx].name + '　类型：' + goods[idx].type + '　状态：' + gs.text;
+  ['author', 'video', 'col'].forEach(s => {
+    document.getElementById(s + 'SearchId').value = '';
+    document.getElementById(s + 'SearchName').value = '';
+  });
+  switchAttachTab('author');
+  renderAttachTable();
+  document.getElementById('attachMask').classList.add('show');
+  document.querySelector('#attachMask .drawer').classList.add('show');
+}
+function closeAttach(){
+  attachIdx = -2;
+  document.getElementById('attachMask').classList.remove('show');
+  document.querySelector('#attachMask .drawer').classList.remove('show');
+}
+function switchAttachTab(kind){
+  Object.keys(ATTACH_SCOPE).forEach(k => {
+    const cap = k === 'author' ? 'Author' : k === 'video' ? 'Video' : 'Col';
+    document.getElementById('attachTab' + cap).classList.toggle('active', kind === k);
+    document.getElementById('attachPanel' + cap).style.display = kind === k ? '' : 'none';
+  });
+}
+function renderAttachTable(){
+  const g = goods[attachIdx];
+
+  const renderRows = (scope, tbodyId, countId, emptyText, cols, nameCells) => {
+    const sc = ATTACH_SCOPE[scope];
+    const kwId = document.getElementById(scope + 'SearchId').value.trim();
+    const kwName = document.getElementById(scope + 'SearchName').value.trim().toLowerCase();
+    const all = (g[sc.key] || []).map(id => sc.lookup(id)).filter(Boolean);
+    const list = all.filter(x =>
+      (!kwId || String(x.id).includes(kwId)) &&
+      (!kwName || sc.label(x).toLowerCase().includes(kwName))
+    );
+    document.getElementById(tbodyId).innerHTML = list.length ? list.map(x => `
+    <tr>
+      <td class="id-cell">${x.id}</td>
+      ${nameCells(x)}
+      ${statCell({pv:x.expPv, uv:x.expUv})}
+      ${statCell({pv:x.clkPv, uv:x.clkUv})}
+      <td><span class="op-link" onclick="askCancelAttach('${scope}',${x.id})">取消挂链</span></td>
+    </tr>`).join('') : `<tr class="empty-row"><td colspan="${cols}">${emptyText}</td></tr>`;
+    document.getElementById(countId).textContent = '（共 ' + list.length + ' 个）';
+  };
+
+  renderRows('author', 'authorAttachTbody', 'authorAttachCount', '暂无挂链博主', 5, x => `<td>${esc(x.nick)}</td>`);
+  renderRows('video', 'attachTbody', 'attachCount', '暂无挂链视频', 6, x => `<td>${esc(x.author)}</td><td>${esc(x.name)}</td>`);
+  renderRows('col', 'colAttachTbody', 'colAttachCount', '暂无挂链合集', 5, x => `<td>${esc(x.name)}</td>`);
+}
+
+/* 取消挂链（单个，二次确认） */
+function askCancelAttach(kind, id){
+  cancelKind = kind;
+  cancelVid = id;
+  document.getElementById('confirmMask').classList.add('show');
+}
+function closeConfirm(){
+  cancelVid = 0;
+  document.getElementById('confirmMask').classList.remove('show');
+}
+function doConfirm(){
+  doCancelAttach();
+}
+function doCancelAttach(){
+  const g = goods[attachIdx];
+  const sc = ATTACH_SCOPE[cancelKind];
+  g[sc.key] = (g[sc.key] || []).filter(id => id !== cancelVid);
+  closeConfirm();
+  renderAttachTable();
+  toast('已取消' + sc.noun + '挂链');
+}
+
+/* ── 新增挂链抽屉（二级）：选择添加 / 批量上传 → 暂存列表 → 确定提交 ── */
+let addScope = 'author';
+let addSelId = 0;
+let addList = []; // 本次新增暂存：[{id}]
+
+function openAddDrawer(scope){
+  addScope = scope;
+  addSelId = 0;
+  addList = [];
+  const sc = ATTACH_SCOPE[scope];
+  document.getElementById('addDrawerTitle').textContent = '新增挂链' + sc.noun;
+  document.getElementById('addPickLabel').innerHTML = '选择' + sc.noun;
+  document.getElementById('addSearch').value = '';
+  document.getElementById('addPickList').classList.remove('show');
+  document.getElementById('addPickList').innerHTML = '';
+  document.getElementById('addTplInput').value = '';
+  renderAddList();
+  document.getElementById('addDrawerMask').classList.add('show');
+  document.querySelector('#addDrawerMask .drawer').classList.add('show');
+}
+function closeAddDrawer(){
+  document.getElementById('addDrawerMask').classList.remove('show');
+  document.querySelector('#addDrawerMask .drawer').classList.remove('show');
+  addSelId = 0;
+  addList = [];
+}
+document.getElementById('addDrawerMask').addEventListener('click', e => {
+  if(e.target === e.currentTarget) closeAddDrawer();
+});
+
+/* 字段1：输入ID（精确）或名称（模糊）搜索，点选后点添加 */
+function addSearchInput(){
+  const sc = ATTACH_SCOPE[addScope];
+  const q = document.getElementById('addSearch').value.trim();
+  const list = document.getElementById('addPickList');
+  addSelId = 0;
+  if(!q){ list.classList.remove('show'); list.innerHTML = ''; return; }
+  const items = /^\d+$/.test(q)
+    ? [sc.lookup(q)].filter(Boolean)
+    : sc.src.filter(x => sc.label(x).toLowerCase().includes(q.toLowerCase())).slice(0, 8);
+  list.classList.add('show');
+  list.innerHTML = items.length
+    ? items.map(x => `<div class="pick-item" id="addpick-${x.id}" onclick="addPick(${x.id})"><span class="pid">${x.id}</span><span>${esc(sc.label(x))}</span></div>`).join('')
+    : '<div class="pick-empty">未找到匹配的' + sc.noun + '</div>';
+}
+function addPick(id){
+  if(!ATTACH_SCOPE[addScope].lookup(id)) return;
+  addSelId = id;
+  document.querySelectorAll('#addPickList .pick-item').forEach(el => el.classList.toggle('sel', +el.id.replace('addpick-', '') === id));
+}
+function addPickOne(){
+  const sc = ATTACH_SCOPE[addScope];
+  if(!addSelId){ toast('请先选择要添加的' + sc.noun); return; }
+  addToStage([addSelId]);
+  addSelId = 0;
+  document.getElementById('addSearch').value = '';
+  const list = document.getElementById('addPickList');
+  list.classList.remove('show');
+  list.innerHTML = '';
+}
+
+/* 字段2：批量新增（模板上传，解析后加入暂存列表） */
+function addDownloadTpl(){
+  const sc = ATTACH_SCOPE[addScope];
+  const sampleId = addScope === 'author' ? '111' : addScope === 'col' ? '222' : '333';
+  const csv = '\ufeff' + sc.noun + 'ID\n' + sampleId + '\n' + (+sampleId + 111) + '\n';
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
+  a.download = '挂链' + sc.noun + '模板.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+function addTplPicked(input){
+  const f = input.files[0];
+  input.value = '';
+  if(!f) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const sc = ATTACH_SCOPE[addScope];
+    const ids = [...new Set(String(reader.result).replace(/\ufeff/g, '').split(/\r?\n/).map(l => l.trim()).filter(l => /^\d+$/.test(l)))].map(Number);
+    if(!ids.length){ toast('模板中未识别到' + sc.noun + 'ID'); return; }
+    addToStage(ids);
+  };
+  reader.readAsText(f);
+}
+
+/* 暂存列表：去重（已挂链 / 本次已加入），渲染 */
+function addToStage(ids){
+  const sc = ATTACH_SCOPE[addScope];
+  const g = goods[attachIdx];
+  const attached = g[sc.key] || [];
+  let added = 0, dupAttached = 0, dupStaged = 0, notFound = 0;
+  ids.forEach(id => {
+    if(!sc.lookup(id)){ notFound++; return; }
+    if(attached.includes(id)){ dupAttached++; return; }
+    if(addList.some(x => x.id === id)){ dupStaged++; return; }
+    addList.push({id});
+    added++;
+  });
+  let msg = [];
+  if(added) msg.push('已加入' + added + '个' + sc.noun);
+  if(dupAttached) msg.push(dupAttached + '个已挂链跳过');
+  if(dupStaged) msg.push(dupStaged + '个已在列表中跳过');
+  if(notFound) msg.push(notFound + '个ID不存在');
+  toast(msg.join('，') || '没有可新增的' + sc.noun);
+  renderAddList();
+}
+function renderAddList(){
+  const sc = ATTACH_SCOPE[addScope];
+  document.getElementById('addListTbody').innerHTML = addList.length ? addList.map((x, i) => {
+    const item = sc.lookup(x.id);
+    return `
+    <tr>
+      <td class="id-cell">${x.id}</td>
+      <td>${esc(item ? sc.label(item) : '')}</td>
+      <td><span class="op-link" onclick="addRemoveOne(${i})">移除</span></td>
+    </tr>`;
+  }).join('') : '<tr class="empty-row"><td colspan="3">暂无数据</td></tr>';
+  document.getElementById('addListCount').textContent = '（共 ' + addList.length + ' 个）';
+  const ok = document.getElementById('addDrawerOk');
+  ok.disabled = !addList.length;
+  ok.title = addList.length ? '' : '请先添加要新增的内容';
+}
+function addRemoveOne(i){
+  addList.splice(i, 1);
+  renderAddList();
+}
+function commitAddDrawer(){
+  const sc = ATTACH_SCOPE[addScope];
+  if(!addList.length){ toast('请先添加要新增的' + sc.noun); return; }
+  const g = goods[attachIdx];
+  g[sc.key] = g[sc.key] || [];
+  g[sc.key].push(...addList.map(x => x.id));
+  toast('新增挂链成功，共' + addList.length + '个' + sc.noun);
+  closeAddDrawer();
+  renderAttachTable();
+}
+
+document.getElementById('attachMask').addEventListener('click', e => {
+  if(e.target === e.currentTarget) closeAttach();
+});
 
 /* ── Render table ── */
 function render(){
@@ -928,7 +1840,8 @@ initAbGroups();
 render();
 gRender();
 renderUploads();
-oRender();
+bRender();
+switchPage('goods');
 </script>
 </body>
 </html>
