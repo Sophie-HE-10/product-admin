@@ -236,6 +236,9 @@ tbody tr:last-child td{border-bottom:none;}
 .btn-save{background:#00b3d4;color:#fff;border:none;padding:6px 18px;border-radius:4px;font-size:12px;cursor:pointer;}
 .btn-save:hover{background:#00a0c0;}
 .btn-save:disabled{background:#c8ecf2;cursor:not-allowed;}
+
+/* ── 会员页配置 ── */
+.vip-count{font-size:11px;color:#aaa;margin-top:4px;}
 </style>
 </head>
 <body>
@@ -267,6 +270,7 @@ tbody tr:last-child td{border-bottom:none;}
         </div>
         <div class="nav-sub">
           <div class="nav-item" style="position:relative;" id="navBanner" onclick="switchPage('banner')">微课banner运营</div>
+          <div class="nav-item" style="position:relative;" id="navVip" onclick="switchPage('vip')">会员页配置</div>
         </div>
       </div>
     </div>
@@ -428,6 +432,47 @@ tbody tr:last-child td{border-bottom:none;}
             </table>
             <div class="pager">
               <span id="bPagerInfo">共 0 条</span>
+              <div class="pages">
+                <div class="page-btn cur">1</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ 会员页配置页 ═══ -->
+      <div class="page" id="page-vip">
+        <div class="filter-bar">
+          <span class="f-label">ID</span>
+          <input class="search-input" id="vSearchId" placeholder="请输入" onkeydown="if(event.key==='Enter')vRender()">
+          <span class="f-label">名称</span>
+          <input class="search-input" id="vSearchName" placeholder="请输入" onkeydown="if(event.key==='Enter')vRender()">
+          <button class="btn-search" onclick="vRender()">查询</button>
+          <button class="btn-ghost" onclick="vResetSearch()">重置</button>
+          <div class="spacer"></div>
+          <button class="btn-primary" onclick="vOpenAbForm()">
+            <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M17 15l3 3-3 3"/></svg>AB配置
+          </button>
+          <button class="btn-primary" onclick="vOpenForm(-1)">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增配置
+          </button>
+        </div>
+        <div class="table-wrap">
+          <div class="table-card">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>名称</th>
+                  <th>头图</th>
+                  <th>状态</th>
+                  <th style="width:130px;">操作</th>
+                </tr>
+              </thead>
+              <tbody id="vTbody"></tbody>
+            </table>
+            <div class="pager">
+              <span id="vPagerInfo">共 0 条</span>
               <div class="pages">
                 <div class="page-btn cur">1</div>
               </div>
@@ -763,6 +808,83 @@ tbody tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
+<!-- ═══ 会员页配置 新增/编辑抽屉 ═══ -->
+<div class="drawer-mask" id="vDrawerMask" style="z-index:110;">
+  <div class="drawer" style="width:640px;">
+    <div class="drawer-hd">
+      <div class="drawer-title" id="vDrawerTitle">新增配置</div>
+      <span class="drawer-close" onclick="vCloseForm()">✕</span>
+    </div>
+    <div class="drawer-body">
+      <div class="form-row" id="vrow-name">
+        <div class="form-label"><span class="req">*</span>名称</div>
+        <div class="form-ctrl">
+          <input type="text" id="v-name" placeholder="请输入名称，最长20字" maxlength="20">
+          <div class="err-tip">请输入名称</div>
+        </div>
+      </div>
+      <div class="form-row" id="vrow-head">
+        <div class="form-label"><span class="req">*</span>头图</div>
+        <div class="form-ctrl">
+          <input type="file" id="vHeadInput" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="vPickFiles(this,vHeadArr,'head')">
+          <div class="upload-grid" id="vHeadGrid"></div>
+          <div class="field-tip">图片尺寸：750*560，支持jpg/jpeg/png/gif，单图最大1M，请上传1张</div>
+          <div class="err-tip">请上传头图</div>
+        </div>
+      </div>
+      <div class="form-row" id="vrow-detail">
+        <div class="form-label"><span class="req">*</span>详情图</div>
+        <div class="form-ctrl">
+          <input type="file" id="vDetailInput" accept="image/jpeg,image/png,image/gif" style="display:none;" multiple onchange="vPickFiles(this,vDetailArr,'detail')">
+          <div class="upload-grid" id="vDetailGrid"></div>
+          <div class="field-tip">图片尺寸：750*1000，支持jpg/jpeg/png/gif，单图最大1M，最多上传10张</div>
+          <div class="err-tip">请至少上传1张详情图</div>
+        </div>
+      </div>
+      <div class="form-row" id="vrow-agree">
+        <div class="form-label"><span class="req">*</span>协议背景图</div>
+        <div class="form-ctrl">
+          <input type="file" id="vAgreeInput" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="vPickFiles(this,vAgreeArr,'agree')">
+          <div class="upload-grid" id="vAgreeGrid"></div>
+          <div class="field-tip">图片尺寸：750*100，支持jpg/jpeg/png/gif，单图最大1M，请上传1张</div>
+          <div class="err-tip">请上传协议背景图</div>
+        </div>
+      </div>
+      <div class="form-row" id="vrow-btn">
+        <div class="form-label"><span class="req">*</span>吸底按钮图</div>
+        <div class="form-ctrl">
+          <input type="file" id="vBtnInput" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="vPickFiles(this,vBtnArr,'btn')">
+          <div class="upload-grid" id="vBtnGrid"></div>
+          <div class="field-tip">图片尺寸：750*160，支持jpg/jpeg/png/gif，单图最大1M，请上传1张</div>
+          <div class="err-tip">请上传吸底按钮图</div>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-ft">
+      <button class="btn-ghost" onclick="vCloseForm()">取消</button>
+      <button class="btn-save" onclick="vSave()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ AB配置抽屉 ═══ -->
+<div class="drawer-mask" id="vAbDrawerMask" style="z-index:110;">
+  <div class="drawer" style="width:520px;">
+    <div class="drawer-hd">
+      <div class="drawer-title">AB配置</div>
+      <span class="drawer-close" onclick="vCloseAbForm()">✕</span>
+    </div>
+    <div class="drawer-body">
+      <div class="field-tip" style="margin-bottom:14px;">为每个AB分组选择展示的会员页配置，不选则该组展示兜底页</div>
+      <div id="vAbRows"></div>
+    </div>
+    <div class="drawer-ft">
+      <button class="btn-ghost" onclick="vCloseAbForm()">取消</button>
+      <button class="btn-save" onclick="vSaveAb()">保存</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ 取消挂链确认弹窗 ═══ -->
 <div class="modal-mask" id="confirmMask" style="z-index:120;">
   <div class="modal modal-sm">
@@ -913,18 +1035,21 @@ function toggleGroup(id){
 let currentPage = 'member';
 function switchPage(page){
   currentPage = page;
-  ['member', 'goods', 'banner'].forEach(p => document.getElementById('page-' + p).classList.toggle('active', p === page));
+  ['member', 'goods', 'banner', 'vip'].forEach(p => document.getElementById('page-' + p).classList.toggle('active', p === page));
   document.getElementById('navMember').classList.toggle('active', page === 'member');
   document.getElementById('navGoods').classList.toggle('active', page === 'goods');
   document.getElementById('navBanner').classList.toggle('active', page === 'banner');
-  document.getElementById('navProduct').classList.toggle('active', page !== 'banner');
-  document.getElementById('navOps').classList.toggle('active', page === 'banner');
+  document.getElementById('navVip').classList.toggle('active', page === 'vip');
+  document.getElementById('navProduct').classList.toggle('active', page === 'member' || page === 'goods');
+  document.getElementById('navOps').classList.toggle('active', page === 'banner' || page === 'vip');
   updateBreadcrumb();
 }
 function updateBreadcrumb(){
   let html;
   if(currentPage === 'banner'){
     html = '<a href="javascript:;">产品运营</a><span class="sep">/</span><span class="cur">微课banner运营</span>';
+  }else if(currentPage === 'vip'){
+    html = '<a href="javascript:;">产品运营</a><span class="sep">/</span><span class="cur">会员页配置</span>';
   }else if(currentPage === 'goods'){
     html = '<a href="javascript:;">商品管理</a><span class="sep">/</span><span class="cur">外链商品</span>';
   }else if(currentPage === 'member'){
@@ -1299,6 +1424,200 @@ function renderUploads(){
   };
   render(gEntryArr, 'entry', 'entryImgGrid');
   render(gRecArr, 'rec', 'recImgGrid');
+}
+
+/* ── 会员页配置 ── */
+let vips = [
+  {id:1, name:'会员页-默认版', on:true, head:[{}], detail:[{},{},{}], agree:[{}], btn:[{}]},
+  {id:2, name:'会员页-双11大促', on:false, head:[{}], detail:[{},{},{},{},{},{},{},{}], agree:[{}], btn:[{}]},
+];
+let abMap = {0:1, 1:1, 2:2, 3:2}; // AB组 -> 配置ID
+let vNextId = 3;
+let vEditIndex = -2;
+let vHeadArr = [], vDetailArr = [], vAgreeArr = [], vBtnArr = [];
+const V_ROW = {head:'vrow-head', detail:'vrow-detail', agree:'vrow-agree', btn:'vrow-btn'};
+const V_MAX = {head:1, detail:10, agree:1, btn:1};
+const V_GRID = {head:'vHeadGrid', detail:'vDetailGrid', agree:'vAgreeGrid', btn:'vBtnGrid'};
+const V_INPUT = {head:'vHeadInput', detail:'vDetailInput', agree:'vAgreeInput', btn:'vBtnInput'};
+const V_STATUS = {
+  on: {text:'上架', cls:'tag-on'},
+  off:{text:'下架', cls:'tag-off'},
+};
+function vRender(){
+  const kwId = document.getElementById('vSearchId').value.trim();
+  const kwName = document.getElementById('vSearchName').value.trim().toLowerCase();
+  const list = vips.filter(v =>
+    (!kwId || String(v.id).includes(kwId)) &&
+    (!kwName || v.name.toLowerCase().includes(kwName))
+  );
+  const tbody = document.getElementById('vTbody');
+  document.getElementById('vPagerInfo').textContent = `共 ${list.length} 条`;
+  if(!list.length){
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="5">暂无数据</td></tr>';
+    return;
+  }
+  const imgCell = arr => {
+    const f = arr && arr[0];
+    return !f ? '<span class="no-img">—</span>'
+      : f.url ? `<span class="thumb"><img class="thumb-img" src="${f.url}"></span>`
+      : `<span class="thumb">${IMG_ICON}</span>`;
+  };
+  tbody.innerHTML = list.map(v => {
+    const gs = V_STATUS[v.on ? 'on' : 'off'];
+    return `
+    <tr>
+      <td class="id-cell">${v.id}</td>
+      <td class="name-cell">${esc(v.name)}</td>
+      <td>${imgCell(v.head)}</td>
+      <td><span class="tag ${gs.cls}">${gs.text}</span></td>
+      <td class="op-cell"><span class="op-link" onclick="vOpenForm(${vips.indexOf(v)})">编辑</span><span class="op-link" onclick="vToggle(${vips.indexOf(v)})">${v.on ? '下架' : '上架'}</span></td>
+    </tr>`;
+  }).join('');
+}
+function vToggle(idx){
+  vips[idx].on = !vips[idx].on;
+  vRender();
+  toast(vips[idx].on ? '上架成功' : '下架成功');
+}
+function vResetSearch(){
+  ['vSearchId','vSearchName'].forEach(id => document.getElementById(id).value = '');
+  vRender();
+}
+
+/* AB配置抽屉 */
+let abDraft = {};
+function vAbLabel(id){
+  const v = vips.find(x => x.id === id);
+  return v ? `${v.id} - ${v.name}` : '';
+}
+function vRenderAbRows(){
+  document.getElementById('vAbRows').innerHTML = Array.from({length:10}, (_, g) => `
+    <div class="form-row">
+      <div class="form-label">${g}组</div>
+      <div class="form-ctrl">
+        <input type="text" id="vAbInp-${g}" placeholder="输入ID或名称搜索" value="${abDraft[g] ? esc(vAbLabel(abDraft[g])) : ''}" oninput="vAbSearch(${g})" autocomplete="off">
+        <div class="pick-list" id="vAbPick-${g}"></div>
+      </div>
+    </div>`).join('');
+}
+function vAbSearch(g){
+  const kw = document.getElementById(`vAbInp-${g}`).value.trim();
+  const panel = document.getElementById(`vAbPick-${g}`);
+  if(!kw){
+    panel.classList.remove('show');
+    panel.innerHTML = '';
+    delete abDraft[g];
+    return;
+  }
+  const kwNum = Number(kw);
+  const isId = /^\d+$/.test(kw);
+  const list = vips.filter(v => isId ? v.id === kwNum : v.name.toLowerCase().includes(kw.toLowerCase()));
+  panel.classList.add('show');
+  panel.innerHTML = list.length
+    ? list.map(v => `<div class="pick-item" onclick="vAbPick(${g},${v.id})"><span class="pid">${v.id}</span>${esc(v.name)}</div>`).join('')
+    : '<div class="pick-empty">无匹配结果</div>';
+}
+function vAbPick(g, id){
+  abDraft[g] = id;
+  document.getElementById(`vAbInp-${g}`).value = vAbLabel(id);
+  document.getElementById(`vAbPick-${g}`).classList.remove('show');
+}
+function vOpenAbForm(){
+  abDraft = {...abMap};
+  vRenderAbRows();
+  document.getElementById('vAbDrawerMask').classList.add('show');
+  document.querySelector('#vAbDrawerMask .drawer').classList.add('show');
+}
+function vCloseAbForm(){
+  document.querySelectorAll('#vAbRows .pick-list').forEach(p => p.classList.remove('show'));
+  document.getElementById('vAbDrawerMask').classList.remove('show');
+  document.querySelector('#vAbDrawerMask .drawer').classList.remove('show');
+}
+function vSaveAb(){
+  abMap = {...abDraft};
+  vCloseAbForm();
+  vRender();
+  toast('保存成功');
+}
+
+function vPickFiles(input, arr, kind){
+  const files = [...input.files];
+  input.value = '';
+  for(const f of files){
+    if(!['image/jpeg','image/png','image/gif'].includes(f.type)){ toast('仅支持jpg、jpeg、png、gif格式'); continue; }
+    if(f.size > 1024 * 1024){ toast('单张图片不能超过1M'); continue; }
+    if(V_MAX[kind] === 1){
+      arr.length = 0;
+      arr.push({url: URL.createObjectURL(f), name: f.name});
+    }else{
+      if(arr.length >= V_MAX[kind]){ toast(`最多上传${V_MAX[kind]}张`); break; }
+      arr.push({url: URL.createObjectURL(f), name: f.name});
+    }
+  }
+  document.getElementById(V_ROW[kind]).classList.remove('error');
+  vRenderUploads();
+}
+function vRemoveImg(kind, i){
+  if(i === undefined){ ({head:vHeadArr, detail:vDetailArr, agree:vAgreeArr, btn:vBtnArr})[kind].length = 0; }
+  else vDetailArr.splice(i, 1);
+  vRenderUploads();
+}
+function vRenderUploads(){
+  const tile = (f, delAttr) => `<div class="upload-tile${f.url ? ' tile-img' : ''}"${f.url ? ` style="background-image:url('${f.url}')"` : ''}>${f.url ? '' : IMG_ICON}<span class="u-del" onclick="event.stopPropagation();${delAttr}">✕</span></div>`;
+  const addTile = kind => `<div class="upload-tile upload-add" onclick="document.getElementById('${V_INPUT[kind]}').click()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>上传</span></div>`;
+  const single = (arr, kind) => document.getElementById(V_GRID[kind]).innerHTML = arr.length ? tile(arr[0], `vRemoveImg('${kind}')`) : addTile(kind);
+  single(vHeadArr, 'head');
+  single(vAgreeArr, 'agree');
+  single(vBtnArr, 'btn');
+  const g = document.getElementById(V_GRID.detail);
+  g.innerHTML = vDetailArr.map((f, i) => tile(f, `vRemoveImg('detail',${i})`)).join('') + (vDetailArr.length < V_MAX.detail ? addTile('detail') : '');
+  let el = g.nextElementSibling;
+  if(!el || !el.classList.contains('vip-count')){
+    el = document.createElement('div');
+    el.className = 'vip-count';
+    g.after(el);
+  }
+  el.textContent = `已上传 ${vDetailArr.length}/${V_MAX.detail} 张`;
+}
+/* 抽屉 */
+function vOpenForm(idx){
+  vEditIndex = idx;
+  document.getElementById('vDrawerTitle').textContent = idx >= 0 ? '编辑配置' : '新增配置';
+  const v = idx >= 0 ? vips[idx] : {name:'', head:[], detail:[], agree:[], btn:[]};
+  vHeadArr = idx >= 0 && vips[idx].head ? vips[idx].head.map(f => ({...f})) : [];
+  vDetailArr = idx >= 0 && vips[idx].detail ? vips[idx].detail.map(f => ({...f})) : [];
+  vAgreeArr = idx >= 0 && vips[idx].agree ? vips[idx].agree.map(f => ({...f})) : [];
+  vBtnArr = idx >= 0 && vips[idx].btn ? vips[idx].btn.map(f => ({...f})) : [];
+  document.getElementById('v-name').value = v.name;
+  document.querySelectorAll('#vDrawerMask .form-row').forEach(r => r.classList.remove('error'));
+  vRenderUploads();
+  document.getElementById('vDrawerMask').classList.add('show');
+  document.querySelector('#vDrawerMask .drawer').classList.add('show');
+}
+function vCloseForm(){
+  document.getElementById('vDrawerMask').classList.remove('show');
+  document.querySelector('#vDrawerMask .drawer').classList.remove('show');
+}
+function vSave(){
+  let ok = true;
+  const err = (id, cond) => {
+    document.getElementById(id).classList.toggle('error', !cond);
+    if(!cond) ok = false;
+  };
+  const name = document.getElementById('v-name').value.trim();
+  err('vrow-name', name);
+  err('vrow-head', vHeadArr.length);
+  err('vrow-detail', vDetailArr.length);
+  err('vrow-agree', vAgreeArr.length);
+  err('vrow-btn', vBtnArr.length);
+  if(!ok){ toast('请完善必填项'); return; }
+  const item = {name, head:[...vHeadArr], detail:[...vDetailArr], agree:[...vAgreeArr], btn:[...vBtnArr]};
+  if(vEditIndex === -1){ vips.push({id:vNextId++, on:true, ...item}); }
+  else{ Object.assign(vips[vEditIndex], item); }
+  vCloseForm();
+  vRender();
+  vRenderAbRows();
+  toast('保存成功');
 }
 
 function gOpenForm(idx){
@@ -1841,7 +2160,8 @@ render();
 gRender();
 renderUploads();
 bRender();
-switchPage('goods');
+vRender();
+switchPage('vip');
 </script>
 </body>
 </html>
